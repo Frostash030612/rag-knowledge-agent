@@ -31,7 +31,9 @@ venv/
 # Local scratch / editor / OS
 # ---------------------------------------------------------------
 edit_resume.py
+make_onepage.py
 inspect_*.py
+dump_*.py
 _t.py
 _out*.txt
 .x.js
