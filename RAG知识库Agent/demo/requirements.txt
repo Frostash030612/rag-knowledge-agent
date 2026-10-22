@@ -1,0 +1,9 @@
+# 本项目刻意只依赖 numpy，其余全部用标准库实现。
+# 如果你要扩展（PDF 解析、真实向量库、reranker），按需添加：
+numpy>=1.24
+
+# 可选扩展（当前未使用，取消注释即可启用）
+# pypdf>=4.0            # PDF 文本提取
+# rank_bm25>=0.2        # 用成熟 BM25 实现替换自实现版本
+# sentence-transformers # 本地 embedding / cross-encoder rerank
+# langfuse              # 可观测性

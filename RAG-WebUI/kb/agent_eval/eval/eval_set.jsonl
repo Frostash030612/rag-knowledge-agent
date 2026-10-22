@@ -1,0 +1,36 @@
+# 评测集：Agent 评测手册
+# 字段：q=问题, gold_cids=正确答案所在 chunk, answerable=资料是否足以回答,
+#       ref=参考答案要点, cat=类别
+# 类别：A-精确匹配（关键词检索主场）/ B-语义泛化（向量检索主场）
+#       C-聚合（跨多条）/ D-不可回答（测幻觉）
+# 由 RAG-WebUI/build_eval.py 生成，含 gold 存在性与实体一致性校验。
+{"q": "Transcript 和 Outcome 这两个概念的区别是什么？", "gold_cids": ["Agent评测手册#3", "Agent评测手册#4"], "answerable": true, "ref": "Transcript 是 Trial 的完整对话记录（messages + tool calls）；Outcome 是执行后的环境状态和关键指标。Agent 说的≠实际做的，必须验证 Outcome", "cat": "A-精确匹配"}
+{"q": "pass@k 和 pass^k 分别表示什么？", "gold_cids": ["Agent评测手册#7"], "answerable": true, "ref": "pass@k 是 k 次尝试中至少 1 次成功的概率；pass^k 是 k 次全部成功的概率，适合面向用户的 Agent", "cat": "A-精确匹配"}
+{"q": "Capability Eval 和 Regression Eval 有什么区别？", "gold_cids": ["Agent评测手册#7"], "answerable": true, "ref": "Capability 问「这 Agent 能做什么」，期望 pass rate 30-50%；Regression 问「还保持着原来的能力吗」，期望接近 100%", "cat": "A-精确匹配"}
+{"q": "Eval Harness 和 Agent Harness 有什么区别？", "gold_cids": ["Agent评测手册#3", "Agent评测手册#4"], "answerable": true, "ref": "Eval Harness 是跑评测的基础设施（环境重置、Trial 执行、结果收集）；Agent Harness 是把模型变成 Agent 的框架，两者要分开测", "cat": "A-精确匹配"}
+{"q": "LLM Judge 的 Uncertain Escape Hatch 是什么？为什么必须有？", "gold_cids": ["Agent评测手册#6"], "answerable": true, "ref": "给 judge 一个「不确定」的出口（如 INSUFFICIENT_INFO），强制它不确定就说不确定；否则等于强迫 LLM 在不确定时乱打分", "cat": "A-精确匹配"}
+{"q": "三层质量门分别测什么、什么频率？", "gold_cids": ["Agent评测手册#13", "Agent评测手册#14"], "answerable": true, "ref": "Layer 1 安全底线（blacklist/PII，每条 transcript 实时）、Layer 2 业务 KPI（每天定时）、Layer 3 离线质量（约 150 task suite，每周 + 每次模型升级）", "cat": "A-精确匹配"}
+{"q": "最小的可用 Benchmark 要多少个 task？怎么分配？", "gold_cids": ["Agent评测手册#13"], "answerable": true, "ref": "150 个：Capability 50 + Regression 50 + Adversarial 30 + Multi-turn Hard 20", "cat": "A-精确匹配"}
+{"q": "τ²-Bench 和 Tau-bench 分别测什么？", "gold_cids": ["Agent评测手册#17", "Agent评测手册#18"], "answerable": true, "ref": "τ²-Bench 测航空/零售等真实业务场景（工具+状态+政策）；Tau-bench 测客服场景多轮交互", "cat": "A-精确匹配"}
+{"q": "LoCoMo 的评测维度有哪些？", "gold_cids": ["Agent评测手册#18"], "answerable": true, "ref": "长时记忆一致性、事实更新后回答是否一致、多轮任务完成情况、时序推理", "cat": "A-精确匹配"}
+{"q": "Agent 在对话里说「订单已创建」，但数据库里其实什么都没有。这类失败该怎么防？", "gold_cids": ["Agent评测手册#4", "Agent评测手册#20"], "answerable": true, "ref": "Transcript 欺骗。至少 50% 的 Check 必须验证 Outcome（DB state、API 记录、文件变更），不能只看 Transcript", "cat": "B-语义泛化"}
+{"q": "做自动评分时，什么时候该用确定性判据，什么时候该让模型来打分？", "gold_cids": ["Agent评测手册#5", "Agent评测手册#6"], "answerable": true, "ref": "确定性优先：code-based 做守门员拦明显错误，LLM judge 只评语气/风格/完整性等主观维度，human 做校准和关键决策；三种是层层递进不是替换", "cat": "B-语义泛化"}
+{"q": "你怎么判断一次模型升级到底该不该上线？", "gold_cids": ["Agent评测手册#15", "Agent评测手册#24"], "answerable": true, "ref": "四级 Ship Gate：Offline Diff（paired comparison + bootstrap CI）→ Shadow Traffic（24h，read divergent transcripts）→ Guardrail-gated A/B → Phased Rollout", "cat": "B-语义泛化"}
+{"q": "为了让 Agent 看似成功，它学会说漂亮话而不是真解决问题，这种情况怎么发现？", "gold_cids": ["Agent评测手册#27"], "answerable": true, "ref": "这就是 reward hacking（UC Berkeley 发现 8 大 benchmark 都能被 hack 到接近 100%）；对策是 Grader 必须验证 Outcome，且 eval 本身要持续演进（living artifact + 定期 read transcripts）", "cat": "B-语义泛化"}
+{"q": "只靠分数为什么不够，还要人去看执行过程？", "gold_cids": ["Agent评测手册#29", "Agent评测手册#30"], "answerable": true, "ref": "分数只告诉你过了没有，不告诉你原因；失败可能集中在某类任务上，不读 transcripts 永远发现不了那个 pattern", "cat": "B-语义泛化"}
+{"q": "同一个 Agent、同一个任务跑十次结果都不一样，这该怎么处理？", "gold_cids": ["Agent评测手册#19"], "answerable": true, "ref": "非确定性是 Agent 评测的根本挑战之一；应对是每个 task 跑多个 trial（至少 10 次），报均值和置信区间", "cat": "B-语义泛化"}
+{"q": "多轮任务里前面一个小偏差，到后面变成大错，评测该怎么设计？", "gold_cids": ["Agent评测手册#19"], "answerable": true, "ref": "错误传播（蝴蝶效应）；难点不在第一轮对不对，而在错了之后能不能自己发现并修正——所以要评中间步骤的纠错能力，不只评最终结果", "cat": "B-语义泛化"}
+{"q": "怎么用一个具体的数字说明「每次都要好」比「至少对一次」要求高得多？", "gold_cids": ["Agent评测手册#7"], "answerable": true, "ref": "pass@k vs pass^k：k=3 时单次成功率 75%，连续 3 次都满意的用户只有 42%", "cat": "B-语义泛化"}
+{"q": "给推荐/排序类 Agent 打分时，用什么指标衡量排序质量？", "gold_cids": ["Agent评测手册#21"], "answerable": true, "ref": "NDCG@k（考虑位置和相关性等级）、MRR、Recall@k、HitRate@k，另外还有 Intra-list Diversity 与 Catalog Coverage 衡量多样性覆盖", "cat": "B-语义泛化"}
+{"q": "构建评测集时，任务该从哪里来、怎么保证标注质量？", "gold_cids": ["Agent评测手册#12"], "answerable": true, "ref": "任务来源七步法：Mine（从 production logs／用户投诉／CS escalation 挖掘）/ Cluster（embedding 聚类）/ Sample（按 cluster 采样保证 coverage）/ Reference（标注什么是 pass + reference trace）/ SME + IAA（至少两位 SME 标注，IAA<0.6 就重写 task）/ Balance / Adversarial", "cat": "B-语义泛化"}
+{"q": "评测 Agent 时，Grader 在成本、速度和确定性上怎么权衡？", "gold_cids": ["Agent评测手册#5"], "answerable": true, "ref": "Code-based 完全确定、毫秒级、极低成本；LLM Judge 非确定、秒级、中等成本；Human 非确定、小时/天级、极高成本", "cat": "C-聚合"}
+{"q": "Agent 评测相比 LLM 评测，难点到底难在哪？", "gold_cids": ["Agent评测手册#19", "Agent评测手册#20"], "answerable": true, "ref": "五个挑战：非确定性、错误传播（蝴蝶效应）、环境漂移、Reward Hacking、Transcript 欺骗", "cat": "C-聚合"}
+{"q": "从跑评测到真的上线，完整流程有哪些阶段？", "gold_cids": ["Agent评测手册#9", "Agent评测手册#15"], "answerable": true, "ref": "Anthropic 8 步路线图（Step 0 起步 20-50 task 到 Step 8 living artifact）；上线用四级 Ship Gate", "cat": "C-聚合"}
+{"q": "评测里有哪些看起来没问题、其实很致命的坑？", "gold_cids": ["Agent评测手册#11", "Agent评测手册#16"], "answerable": true, "ref": "0% pass@100 往往是 task 写错了；不要只看 tool call sequence；LLM judge 不加 escape hatch；用 primary metric 做 early stop 是隐式 p-hacking", "cat": "C-聚合"}
+{"q": "主流 Agent 评测 benchmark 各自覆盖什么能力？", "gold_cids": ["Agent评测手册#17", "Agent评测手册#18"], "answerable": true, "ref": "SWE-bench Verified（软件工程）、WebArena（真实网页多步）、GAIA（通用助手）、AgentBench（8 类环境广度）、τ²-Bench（真实业务办事）、Tau-bench（客服多轮）、LoCoMo（长对话记忆）", "cat": "C-聚合"}
+{"q": "Claude 3.5 Sonnet 的 API 每百万 token 多少钱？", "gold_cids": [], "answerable": false, "ref": "手册没有 API 定价，应回答资料不足", "cat": "D-不可回答"}
+{"q": "DeepSeek-V3 一共有多少参数？", "gold_cids": [], "answerable": false, "ref": "手册没有 DeepSeek-V3 参数量，应回答资料不足", "cat": "D-不可回答"}
+{"q": "SWE-bench Verified 上目前最高分是多少？", "gold_cids": [], "answerable": false, "ref": "手册只说了该 benchmark 测什么，没有具体分数，应回答资料不足", "cat": "D-不可回答"}
+{"q": "我们公司上个季度 Agent 业务的营收是多少？", "gold_cids": [], "answerable": false, "ref": "手册没有公司经营数据，应回答资料不足", "cat": "D-不可回答"}
+{"q": "GPT-4o 的上下文窗口具体是多少 token？", "gold_cids": [], "answerable": false, "ref": "手册没有 GPT-4o 的具体窗口数值，应回答资料不足", "cat": "D-不可回答"}
+{"q": "LangSmith 和 Langfuse 的订阅价格差多少？", "gold_cids": [], "answerable": false, "ref": "手册没有工具定价，应回答资料不足", "cat": "D-不可回答"}

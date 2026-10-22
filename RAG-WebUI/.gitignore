@@ -1,0 +1,14 @@
+# 索引产物（可重建，不进版本库）
+kb/*/index/
+*.npy
+
+# 本地环境与密钥
+.env
+*.key
+secrets.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/

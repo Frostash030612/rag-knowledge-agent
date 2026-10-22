@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAG 知识库 · 问答前端</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --panel:#fff; --line:#e3e6ea; --ink:#1c2128;
+    --muted:#6b7683; --accent:#0f766e; --accent-soft:#e6f4f2;
+    --warn:#b45309; --warn-soft:#fef3c7; --bad:#b91c1c; --bad-soft:#fee2e2;
+    --ok:#15803d; --ok-soft:#dcfce7;
+    --mono:ui-monospace,SFMono-Regular,"Cascadia Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.65 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+  header{background:var(--panel);border-bottom:1px solid var(--line);
+    padding:14px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:10}
+  header h1{font-size:16px;margin:0;font-weight:600;letter-spacing:.3px}
+  .badge{font-size:12px;padding:2px 9px;border-radius:99px;background:var(--accent-soft);
+    color:var(--accent);font-weight:500}
+  .badge.gray{background:#eef1f4;color:var(--muted)}
+  header .meta{margin-left:auto;font-size:12px;color:var(--muted);font-family:var(--mono)}
+  main{max-width:1180px;margin:0 auto;padding:20px 22px 80px;
+    display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
+  @media(max-width:980px){main{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px;margin-bottom:16px}
+  .card h2{font-size:13px;text-transform:uppercase;letter-spacing:.8px;
+    color:var(--muted);margin:0 0 12px;font-weight:600}
+
+  /* ---- 提问区 ---- */
+  .askbox textarea{width:100%;min-height:76px;resize:vertical;padding:11px 13px;
+    border:1px solid var(--line);border-radius:8px;font:inherit;color:inherit;
+    background:#fcfdfd;outline:none}
+  .askbox textarea:focus{border-color:var(--accent);background:#fff;
+    box-shadow:0 0 0 3px var(--accent-soft)}
+  .row{display:flex;gap:10px;align-items:center;margin-top:11px;flex-wrap:wrap}
+  button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);
+    background:#fff;padding:8px 15px;color:var(--ink);transition:.12s}
+  button:hover{border-color:#c6ccd3;background:#fbfcfc}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff;
+    font-weight:500}
+  button.primary:hover{background:#0d635c}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .examples{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .chip{font-size:12.5px;padding:5px 11px;border-radius:99px;border:1px solid var(--line);
+    background:#fcfdfd;cursor:pointer;color:var(--muted)}
+  .chip:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+
+  /* ---- 设置 ---- */
+  details.settings summary{cursor:pointer;font-size:13px;color:var(--muted);
+    font-weight:600;letter-spacing:.8px;text-transform:uppercase}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:13px}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+  select,input[type=number]{width:100%;padding:7px 9px;border:1px solid var(--line);
+    border-radius:7px;font:inherit;font-size:13.5px;background:#fcfdfd;color:inherit}
+  .hint{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.55}
+
+  /* ---- 答案 ---- */
+  .turn{border-left:3px solid var(--accent);padding-left:0;margin-bottom:22px}
+  .q{font-weight:600;margin-bottom:9px;display:flex;gap:8px;align-items:baseline}
+  .q .n{font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:400}
+  .answer{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px;white-space:pre-wrap;word-break:break-word}
+  .ref{display:inline-block;font-size:11px;font-family:var(--mono);font-weight:600;
+    background:var(--accent-soft);color:var(--accent);border-radius:4px;
+    padding:0 5px;margin:0 2px;cursor:pointer;vertical-align:1px}
+  .ref:hover{background:var(--accent);color:#fff}
+  .status{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);
+    margin-top:9px;font-family:var(--mono)}
+  .tag{font-size:12px;padding:2px 9px;border-radius:99px;font-weight:500}
+  .tag.ok{background:var(--ok-soft);color:var(--ok)}
+  .tag.warn{background:var(--warn-soft);color:var(--warn)}
+  .tag.bad{background:var(--bad-soft);color:var(--bad)}
+  .missing{margin-top:10px;padding:10px 13px;background:var(--warn-soft);
+    border-radius:8px;font-size:13.5px;color:#78350f}
+
+  /* ---- 召回明细 ---- */
+  aside .card{position:sticky;top:78px}
+  .hits{max-height:70vh;overflow:auto;margin:-4px -4px 0}
+  .hit{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:8px 4px;
+    background:#fcfdfd;scroll-margin-top:90px}
+  .hit.flash{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .hit .top{display:flex;gap:8px;align-items:center;font-size:12px;
+    font-family:var(--mono);color:var(--muted)}
+  .hit .rank{background:#eef1f4;border-radius:5px;padding:1px 7px;font-weight:600;
+    color:var(--ink)}
+  .hit .score{margin-left:auto;color:var(--accent);font-weight:600}
+  .hit .body{font-size:13px;margin-top:7px;white-space:pre-wrap;color:#333b45;
+    max-height:76px;overflow:hidden;position:relative}
+  .hit.open .body{max-height:none}
+  .hit .body::after{content:"";position:absolute;left:0;right:0;bottom:0;height:26px;
+    background:linear-gradient(transparent,#fcfdfd)}
+  .hit.open .body::after{display:none}
+  .hit .more{font-size:12px;color:var(--accent);cursor:pointer;margin-top:5px;
+    display:inline-block}
+  .empty{color:var(--muted);font-size:13px;text-align:center;padding:26px 8px}
+  .spin{display:inline-block;width:13px;height:13px;border:2px solid var(--accent-soft);
+    border-top-color:var(--accent);border-radius:50%;animation:s .7s linear infinite;
+    vertical-align:-2px;margin-right:7px}
+  @keyframes s{to{transform:rotate(360deg)}}
+
+  /* ---- 流式 ---- */
+  .cursor{display:inline-block;width:7px;height:15px;background:var(--accent);
+    vertical-align:-2px;margin-left:2px;animation:blink 1s steps(2,start) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .thinking{margin-bottom:10px;border:1px dashed var(--line);border-radius:8px;
+    background:#fafbfc;font-size:12.5px;color:var(--muted)}
+  .thinking summary{cursor:pointer;padding:7px 11px;user-select:none}
+  .thinking .inner{padding:0 11px 10px;max-height:120px;overflow:auto;
+    white-space:pre-wrap;font-family:var(--mono);font-size:11.5px}
+  .live{font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:7px}
+  .switch{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);
+    cursor:pointer;user-select:none}
+  .switch input{width:auto;margin:0}
+
+  /* ---- 知识库切换 ---- */
+  .kbtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .kbtab{display:flex;align-items:center;gap:8px;padding:9px 15px;border-radius:9px;
+    border:1px solid var(--line);background:var(--panel);cursor:pointer;
+    transition:.12s;font-size:14px;line-height:1.3}
+  .kbtab:hover{border-color:#c6ccd3}
+  .kbtab.active{border-color:var(--accent);background:var(--accent-soft);
+    box-shadow:0 0 0 1px var(--accent) inset}
+  .kbtab .em{font-size:17px}
+  .kbtab .nm{font-weight:600}
+  .kbtab .ct{font-size:11.5px;font-family:var(--mono);color:var(--muted);
+    background:#eef1f4;border-radius:99px;padding:1px 7px}
+  .kbtab.active .ct{background:#fff;color:var(--accent)}
+  .kbtab .ld{display:inline-block;width:11px;height:11px;border:2px solid var(--accent-soft);
+    border-top-color:var(--accent);border-radius:50%;animation:s .7s linear infinite}
+  .kbdesc{font-size:12.5px;color:var(--muted);margin:-6px 0 14px;padding-left:2px}
+  .kbtag{font-size:11.5px;font-family:var(--mono);color:var(--accent);
+    background:var(--accent-soft);border-radius:5px;padding:1px 7px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>DRAM 设备与工艺知识库</h1>
+  <span class="badge" id="bIndex">索引加载中…</span>
+  <span class="badge gray" id="bModel">模型加载中…</span>
+  <div class="meta" id="bUrl"></div>
+</header>
+
+<main>
+  <div>
+    <div class="kbtabs" id="kbtabs"></div>
+    <div class="kbdesc" id="kbdesc">加载中…</div>
+
+    <div class="card askbox">
+      <h2>提问</h2>
+      <textarea id="q" placeholder="例如：ALM-1042 报警怎么处理？（Ctrl+Enter 提交）"></textarea>
+      <div class="examples" id="examples"></div>
+      <div class="row">
+        <button class="primary" id="btnAsk">提问（检索 + 生成）</button>
+        <button id="btnSearch">只检索（不调生成，免费）</button>
+        <label class="switch"><input type="checkbox" id="streamOn" checked> 流式输出</label>
+        <span id="cost" style="font-size:12px;color:var(--muted)"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <details class="settings">
+        <summary>检索设置</summary>
+        <div class="grid2">
+          <div class="field">
+            <label>检索模式</label>
+            <select id="mode">
+              <option value="hybrid" selected>hybrid（向量 + BM25）</option>
+              <option value="vector">vector（纯向量）</option>
+              <option value="bm25">bm25（纯关键词）</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>重排策略</label>
+            <select id="rerank">
+              <option value="max" selected>max（两阶段，α=0.7）</option>
+              <option value="minmax">minmax</option>
+              <option value="lex">lex（+词面覆盖）</option>
+              <option value="rrf">rrf（池内 RRF）</option>
+              <option value="off">off（退回基线 RRF）</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>送入生成的 Top-k</label>
+            <input type="number" id="topk" value="3" min="1" max="10">
+          </div>
+          <div class="field">
+            <label>宽召回池 rerank_pool</label>
+            <input type="number" id="pool" value="40" min="3" max="47">
+          </div>
+          <div class="field">
+            <label>向量权重 α</label>
+            <input type="number" id="alpha" value="0.7" min="0" max="1" step="0.05">
+          </div>
+        </div>
+        <div class="hint">
+          默认 <b>hybrid + max + α=0.7 + Top-3</b>，即 README 里 Recall@3 = 0.8710 的配置。
+          把重排关掉（off）会退回 RRF 基线 0.8387，可以现场对比差异。
+        </div>
+      </details>
+    </div>
+
+    <div id="log"></div>
+  </div>
+
+  <aside>
+    <div class="card">
+      <h2>召回明细 <span id="hitCount" style="text-transform:none"></span></h2>
+      <div class="hits" id="hits"><div class="empty">提问后这里会摊开实际召回的 chunk 原文，<br>用来判断是「检索错了」还是「生成错了」。</div></div>
+    </div>
+  </aside>
+</main>
+
+<script>
+let CONFIG = null;
+let KB = null;                        // 当前选中的知识库 id
+
+const $ = s => document.querySelector(s);
+
+function esc(s){ return String(s??"").replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function currentKb(){
+  return (CONFIG?.kbs || []).find(k => k.id === KB) || null;
+}
+
+function params(){
+  return {
+    kb: KB,
+    mode: $("#mode").value,
+    rerank: $("#rerank").value,
+    top_k: +$("#topk").value || 3,
+    rerank_pool: +$("#pool").value || 40,
+    alpha: parseFloat($("#alpha").value)
+  };
+}
+
+/* ---------- 知识库切换 ---------- */
+function renderTabs(){
+  const box = $("#kbtabs");
+  box.innerHTML = (CONFIG.kbs || []).map(k => `
+    <div class="kbtab ${k.id === KB ? "active" : ""}" data-kb="${esc(k.id)}"
+         title="${esc(k.desc || "")}">
+      <span class="em">${esc(k.emoji || "📚")}</span>
+      <span class="nm">${esc(k.name)}</span>
+      <span class="ct">${k.ready ? k.n_chunks + " chunks" : "未建索引"}</span>
+    </div>`).join("");
+
+  box.querySelectorAll(".kbtab").forEach(el => {
+    el.onclick = () => selectKb(el.dataset.kb);
+  });
+}
+
+function selectKb(id, force){
+  if(id === KB && !force) return;
+  KB = id;
+  try{ localStorage.setItem("rag_kb", id); }catch{}
+  syncKbUI();
+}
+
+/* 把当前 KB 反映到标题、描述、示例、占位符和标签栏 */
+function syncKbUI(){
+  const k = currentKb();
+  $("#kbdesc").innerHTML = k
+    ? `${esc(k.desc || "")} ${k.ready
+        ? `<span class="kbtag">${k.n_chunks} chunks · ${k.dim} 维 · ${esc(k.built_at || "")}</span>`
+        : `<span style="color:var(--bad)">该库还没建索引</span>`}`
+    : "";
+  $("#bIndex").textContent = k && k.ready
+    ? `当前库 ${k.name} · ${k.n_chunks} chunks` : "知识库不可用";
+
+  $("#examples").innerHTML = (k?.examples || []).map(e =>
+    `<span class="chip">${esc(e)}</span>`).join("");
+  document.querySelectorAll(".chip").forEach(el =>
+    el.onclick = () => { $("#q").value = el.textContent; $("#q").focus(); });
+
+  $("#q").placeholder = `在「${k?.name || ""}」里提问…（Ctrl+Enter 提交）`;
+  renderTabs();
+}
+
+/* ---------- 配置信息 ---------- */
+fetch("/api/config").then(r => r.json()).then(c => {
+  CONFIG = c;
+  let saved = null;
+  try{ saved = localStorage.getItem("rag_kb"); }catch{}
+  const ready = k => k && k.ready;
+  KB = (saved && ready(c.kbs.find(k => k.id === saved))) ? saved
+     : (ready(c.kbs.find(k => k.id === c.default_kb)) ? c.default_kb
+        : (c.kbs.find(ready)?.id || c.default_kb));
+  syncKbUI();
+
+  $("#bModel").textContent = c.emb_model + " + " + c.llm_model;
+  const th = c.disable_thinking ? " · 思考已关闭" : " · 思考已开启";
+  $("#bUrl").textContent = c.base_url + th + (c.has_key ? "" : "  ⚠ 未配置 key");
+}).catch(e => { $("#bIndex").textContent = "配置读取失败: " + e; });
+
+/* ---------- 答案里的 [1] 变成可点引用 ---------- */
+function linkifyRefs(text){
+  return esc(text).replace(/\[(\d+)\]/g,
+    '<span class="ref" data-ref="$1">[$1]</span>');
+}
+
+/* ---------- 渲染召回明细 ---------- */
+function renderHits(hits, label){
+  $("#hitCount").textContent = hits.length ? `· ${label} ${hits.length} 条` : "";
+  $("#hits").innerHTML = hits.map(h => `
+    <div class="hit" id="hit-${h.rank}">
+      <div class="top">
+        <span class="rank">#${h.rank}</span>
+        <span>${esc(h.doc)} / ${esc(h.cid)}</span>
+        <span class="score">${h.score}</span>
+      </div>
+      <div class="body">${esc(h.text)}</div>
+      <span class="more">展开全文 ▾</span>
+    </div>`).join("") || `<div class="empty">没有召回结果</div>`;
+
+  document.querySelectorAll(".hit").forEach(el => {
+    el.querySelector(".more").onclick = () => {
+      el.classList.toggle("open");
+      el.querySelector(".more").textContent =
+        el.classList.contains("open") ? "收起 ▴" : "展开全文 ▾";
+    };
+  });
+}
+
+function flashHit(rank){
+  const el = document.getElementById("hit-" + rank);
+  if(!el) return;
+  document.querySelectorAll(".hit").forEach(h => h.classList.remove("flash"));
+  el.classList.add("flash");
+  el.scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+
+document.addEventListener("click", e => {
+  if(e.target.classList.contains("ref")) flashHit(e.target.dataset.ref);
+});
+
+/* ---------- 提问 ---------- */
+function turnEl(q, kbName){
+  const i = document.querySelectorAll(".turn").length + 1;
+  const div = document.createElement("div");
+  div.className = "turn";
+  div.innerHTML = `<div class="q"><span class="n">Q${i}</span><span>${esc(q)}</span>
+      <span class="kbtag">${esc(kbName || "")}</span></div>
+    <div class="answer"><span class="spin"></span>思考中…</div>`;
+  $("#log").prepend(div);
+  return div;
+}
+
+function statusHtml(d, extra){
+  const t = d.timing || {};
+  const tag = d.answerable
+    ? `<span class="tag ok">answerable = true</span>`
+    : (d.failed
+        ? `<span class="tag bad">结构化输出校验失败</span>`
+        : `<span class="tag warn">answerable = false（资料不足，已拒答）</span>`);
+  return `<div class="status">
+    ${tag}
+    <span>召回 ${(d.hits||[]).length}</span>
+    <span>检索 ${t.retrieval_s ?? "-"}s</span>
+    <span>总计 ${t.total_s ?? "-"}s</span>
+    <span>重修 ${d.repairs ?? 0} 次</span>
+    ${extra ? `<span>${esc(extra)}</span>` : ""}
+  </div>`;
+}
+
+function finish(d, box, answer){
+  if(d.answerable){
+    answer.innerHTML = linkifyRefs(d.answer || "");
+  }else{
+    answer.innerHTML = `<b>${esc(d.answer || "资料不足")}</b>` +
+      (d.missing ? `<div class="missing">缺什么：${esc(d.missing)}</div>` : "");
+  }
+  answer.insertAdjacentHTML("afterend", statusHtml(d, box._firstAt));
+}
+
+/* ---------- 非流式 ---------- */
+async function runPlain(q, box, answer, body){
+  const r = await fetch("/api/ask", {
+    method:"POST", headers:{"Content-Type":"application/json"}, body: body()
+  });
+  const d = await r.json();
+  if(d.error) throw new Error(d.error);
+  renderHits(d.hits || [], "Top");
+  finish(d, box, answer);
+}
+
+/* ---------- 流式（NDJSON over fetch） ---------- */
+async function runStream(q, box, answer, body){
+  const t0 = performance.now();
+  box._firstAt = null;
+  const r = await fetch("/api/ask_stream", {
+    method:"POST", headers:{"Content-Type":"application/json"}, body: body()
+  });
+  if(!r.ok || !r.body) throw new Error(`HTTP ${r.status}`);
+
+  const reader = r.body.getReader();
+  const dec = new TextDecoder("utf-8");
+  let sse = "", text = "", reasoning = "", result = null, thinkBox = null;
+
+  const paint = () => { answer.innerHTML = linkifyRefs(text) + '<span class="cursor"></span>'; };
+  const live = document.createElement("div");
+  live.className = "live";
+  live.textContent = "已连接，等待检索…";
+  box.appendChild(live);
+
+  for(;;){
+    const {done, value} = await reader.read();
+    if(done) break;
+    sse += dec.decode(value, {stream:true});
+    const lines = sse.split("\n");
+    sse = lines.pop();                      // 最后一行可能不完整，留到下一轮
+    for(const line of lines){
+      if(!line.trim()) continue;
+      let e; try{ e = JSON.parse(line); }catch{ continue; }
+
+      if(e.type === "hits"){
+        box._hits = e.hits;
+        renderHits(e.hits, "Top");
+        live.textContent = `检索完成 ${e.timing?.retrieval_s ?? "-"}s，生成中…`;
+
+      }else if(e.type === "reasoning"){
+        // 模型没被禁用思考时才会走到这里：把思维链折叠起来，避免干等
+        if(!thinkBox){
+          thinkBox = document.createElement("details");
+          thinkBox.className = "thinking";
+          thinkBox.innerHTML = `<summary>模型的思考过程（可展开，不参与答案）</summary>
+            <div class="inner"></div>`;
+          box.insertBefore(thinkBox, answer);
+        }
+        reasoning += e.text;
+        const inner = thinkBox.querySelector(".inner");
+        inner.textContent = reasoning;
+        inner.scrollTop = inner.scrollHeight;
+        live.textContent = "思考中…（已产出 " + reasoning.length + " 字）";
+
+      }else if(e.type === "delta"){
+        if(box._firstAt === null) box._firstAt = `首字 ${((performance.now()-t0)/1000).toFixed(2)}s`;
+        text += e.text;
+        paint();
+
+      }else if(e.type === "reset"){
+        text = ""; paint();
+        live.textContent = "输出校验未通过，正在重修…";
+
+      }else if(e.type === "result"){
+        result = e;
+
+      }else if(e.type === "error"){
+        throw new Error(e.error);
+      }
+    }
+  }
+
+  live.remove();
+  if(!result) throw new Error("流意外中断，没有收到最终结果");
+  result.hits = box._hits || [];
+  finish(result, box, answer);
+}
+
+async function run(onlySearch){
+  const q = $("#q").value.trim();
+  if(!q){ $("#q").focus(); return; }
+  const kbId = KB;                       // 提交瞬间固定，避免请求途中切换导致串库
+  const kbName = currentKb()?.name || "";
+  $("#btnAsk").disabled = $("#btnSearch").disabled = true;
+  $("#cost").textContent = onlySearch ? "本次不消耗生成额度" : "本次会调用生成模型";
+  const box = turnEl(q, kbName);
+  const answer = box.querySelector(".answer");
+  const body = () => JSON.stringify({q, ...params(), kb: kbId});
+
+  try{
+    if(onlySearch){
+      const r = await fetch("/api/search", {
+        method:"POST", headers:{"Content-Type":"application/json"}, body: body()
+      });
+      const d = await r.json();
+      if(d.error) throw new Error(d.error);
+      renderHits(d.hits || [], "只检索");
+      answer.innerHTML = `<span style="color:var(--muted)">只做了检索（${d.timing.retrieval_s}s），未调用生成模型。</span>`;
+    }else if($("#streamOn").checked){
+      await runStream(q, box, answer, body);
+    }else{
+      await runPlain(q, box, answer, body);
+    }
+  }catch(e){
+    answer.innerHTML = `<span style="color:var(--bad)">请求失败：${esc(e.message)}</span>`;
+  }finally{
+    $("#btnAsk").disabled = $("#btnSearch").disabled = false;
+  }
+}
+
+$("#btnAsk").onclick = () => run(false);
+$("#btnSearch").onclick = () => run(true);
+$("#q").addEventListener("keydown", e => {
+  if((e.ctrlKey || e.metaKey) && e.key === "Enter") run(false);
+});
+$("#q").focus();
+</script>
+</body>
+</html>

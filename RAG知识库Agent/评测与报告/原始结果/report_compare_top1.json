@@ -1,0 +1,22 @@
+{
+ "n_cases": 38,
+ "top_k": 1,
+ "modes": {
+  "vector": {
+   "recall@1": 0.6129,
+   "mrr": 0.6129,
+   "n_gold_cases": 31
+  },
+  "bm25": {
+   "recall@1": 0.4516,
+   "mrr": 0.4516,
+   "n_gold_cases": 31
+  },
+  "hybrid": {
+   "recall@1": 0.5806,
+   "mrr": 0.5806,
+   "n_gold_cases": 31
+  }
+ },
+ "retrieval_only": true
+}

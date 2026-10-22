@@ -1,0 +1,767 @@
+{
+ "desc": "IAA 分析用的辅助信息：困难集 ref、按构造预设的人工等级、检索 hits。**标注者不得查看本文件**，否则破坏了独立标注。",
+ "gen_helpers": {
+  "gen:dram\u0000ALM-1042 报警的触发条件是什么？": {
+   "ref": "腔体压力偏离设定值超过 8% 且持续 3 秒以上",
+   "hits": [
+    "02_alarm_manual#0",
+    "02_alarm_manual#1",
+    "09_equipment_maintenance#2"
+   ]
+  },
+  "gen:dram\u0000ALM-3310 应该优先排查什么？": {
+   "ref": "先查 MFC 是否需重新标定、气瓶余量；多台机台同时出现则优先排查气体供应系统",
+   "hits": [
+    "02_alarm_manual#1",
+    "02_alarm_manual#0",
+    "09_equipment_maintenance#2"
+   ]
+  },
+  "gen:dram\u0000MTBF 和 MTTR 分别是什么意思？": {
+   "ref": "MTBF 平均无故障工作时间；MTTR 平均修复时间",
+   "hits": [
+    "09_equipment_maintenance#1",
+    "11_glossary#8",
+    "09_equipment_maintenance#2"
+   ]
+  },
+  "gen:dram\u0000WAT 和 PCM 是什么？": {
+   "ref": "晶圆允收测试/工艺控制监控，在晶圆级测器件电学参数",
+   "hits": [
+    "05_metrology_inspection#2",
+    "11_glossary#4",
+    "05_metrology_inspection#3"
+   ]
+  },
+  "gen:dram\u0000OOC 和 OOS 有什么区别？": {
+   "ref": "OOC 针对过程（非随机波动），OOS 针对产品（超出规格限）",
+   "hits": [
+    "07_spc#0",
+    "07_spc#1",
+    "11_glossary#7"
+   ]
+  },
+  "gen:dram\u0000Cpk 和 Ppk 的区别是什么？": {
+   "ref": "Cpk 用组内标准差并考虑居中，Ppk 用整体标准差反映实际表现",
+   "hits": [
+    "07_spc#3",
+    "11_glossary#8",
+    "11_glossary#7"
+   ]
+  },
+  "gen:dram\u0000DPPM 是什么指标？": {
+   "ref": "Defective Parts Per Million，每百万件中的不良品数，衡量流出风险",
+   "hits": [
+    "09_equipment_maintenance#2",
+    "07_spc#3",
+    "12_test_program#1"
+   ]
+  },
+  "gen:dram\u0000AMC 指什么污染？": {
+   "ref": "Airborne Molecular Contamination，气态分子污染",
+   "hits": [
+    "10_cleanroom_contamination#1",
+    "11_glossary#9",
+    "11_glossary#8"
+   ]
+  },
+  "gen:dram\u0000ISO 5 相当于传统洁净室的哪个等级？": {
+   "ref": "约相当于 Class 100，用于一般前道工序",
+   "hits": [
+    "10_cleanroom_contamination#0",
+    "10_cleanroom_contamination#1",
+    "10_cleanroom_contamination#2"
+   ]
+  },
+  "gen:dram\u0000怎么让工艺在批次之间保持稳定，不要一批一批地漂？": {
+   "ref": "用 R2R 控制，EWMA 控制器按 u_k = u_(k-1) + K(T − y_k) 更新下一批输入",
+   "hits": [
+    "08_data_analysis#2",
+    "06_apc_r2r_fdc#1",
+    "09_equipment_maintenance#0"
+   ]
+  },
+  "gen:dram\u0000为什么不能把传感器的整条曲线直接拍平了丢给模型？": {
+   "ref": "recipe 分多个 step，各 step 物理机制不同，必须按 step 分段提特征",
+   "hits": [
+    "08_data_analysis#2",
+    "08_data_analysis#3",
+    "08_data_analysis#1"
+   ]
+  },
+  "gen:dram\u0000模型离线看着很好，上线就不准，通常是什么原因造成的？": {
+   "ref": "数据泄漏，常见于随机切分时序数据、使用未来信息、跨批次统计量归一化",
+   "hits": [
+    "08_data_analysis#3",
+    "05_metrology_inspection#1",
+    "06_apc_r2r_fdc#3"
+   ]
+  },
+  "gen:dram\u0000怎么提前发现设备在慢慢变坏，而不是等它坏掉？": {
+   "ref": "预测性维护 PdM，预测剩余可用寿命 RUL 并提前安排维护窗口",
+   "hits": [
+    "09_equipment_maintenance#2",
+    "06_apc_r2r_fdc#2",
+    "09_equipment_maintenance#1"
+   ]
+  },
+  "gen:dram\u0000穿洁净服主要是为了保护谁？": {
+   "ref": "保护产品不被人的颗粒污染，而不是保护人",
+   "hits": [
+    "10_cleanroom_contamination#1",
+    "10_cleanroom_contamination#2",
+    "10_cleanroom_contamination#0"
+   ]
+  },
+  "gen:dram\u0000测量一个具体数值和判断有没有异常，这两类工序有什么本质不同？": {
+   "ref": "量测输出连续量回答「是多少」；检测输出缺陷数量位置回答「有没有」",
+   "hits": [
+    "05_metrology_inspection#0",
+    "05_metrology_inspection#1",
+    "08_data_analysis#1"
+   ]
+  },
+  "gen:dram\u0000什么是虚拟量测，它为什么有必要存在？": {
+   "ref": "用设备传感器数据预测无法每片实测的量测值；因为实测是抽检且耗时长",
+   "hits": [
+    "05_metrology_inspection#1",
+    "09_equipment_maintenance#2",
+    "04_process_modules#0"
+   ]
+  },
+  "gen:dram\u0000怎么判断一个工艺过程的能力够不够，能不能稳定产出合格品？": {
+   "ref": "用过程能力指数 Cp/Cpk/Ppk，注意其与良率的换算依赖正态假设",
+   "hits": [
+    "11_glossary#8",
+    "07_spc#1",
+    "11_glossary#7"
+   ]
+  },
+  "gen:dram\u0000设备做完维护之后，为什么历史数据不能直接拿来用了？": {
+   "ref": "PM 后设备状态跳变，数据分布改变；应把距上次 PM 的时间/片数作为特征或分段建模",
+   "hits": [
+    "09_equipment_maintenance#2",
+    "09_equipment_maintenance#0",
+    "09_equipment_maintenance#1"
+   ]
+  },
+  "gen:dram\u0000为什么刻蚀只是照着光刻的图形做，最后尺寸还是会偏？": {
+   "ref": "刻蚀速率漂移会叠加到光刻 CD 偏差上，所以刻蚀本身是 CD 偏差的重要来源",
+   "hits": [
+    "04_process_modules#1",
+    "04_process_modules#0",
+    "04_process_modules#2"
+   ]
+  },
+  "gen:dram\u0000APC 的三层分别负责什么？它们怎么构成闭环？": {
+   "ref": "FDC 检测、VM 观测、R2R 控制；FDC 拦截异常→VM 提供观测值→R2R 调整下一批",
+   "hits": [
+    "06_apc_r2r_fdc#0",
+    "06_apc_r2r_fdc#3",
+    "11_glossary#7"
+   ]
+  },
+  "gen:dram\u0000良率损失怎么分类，在晶圆图上怎么体现？": {
+   "ref": "随机缺陷（散点）与系统性失效（规律图案）；靠 wafer map 图案区分",
+   "hits": [
+    "03_yield_analysis#0",
+    "11_glossary#4",
+    "05_metrology_inspection#2"
+   ]
+  },
+  "gen:dram\u0000EWMA 控制器的 K 值取大取小各有什么代价？": {
+   "ref": "K 大响应快但易受量测噪声影响、输入波动大；K 小平稳但对真实漂移响应慢",
+   "hits": [
+    "06_apc_r2r_fdc#1",
+    "07_spc#2",
+    "11_glossary#4"
+   ]
+  },
+  "gen:dram\u0000FDC 要同时看哪两个统计量？各自反映什么？": {
+   "ref": "T² 反映主元空间偏离（变化幅度），SPE/Q 反映残差空间相关结构是否被破坏",
+   "hits": [
+    "06_apc_r2r_fdc#2",
+    "07_spc#3",
+    "06_apc_r2r_fdc#3"
+   ]
+  },
+  "gen:dram\u0000为什么设备报警太多会让系统失效？怎么避免？": {
+   "ref": "误报过多导致工程师忽略告警；需看报警准确率与提前量，并建立处置结果回流",
+   "hits": [
+    "06_apc_r2r_fdc#3",
+    "09_equipment_maintenance#2",
+    "06_apc_r2r_fdc#2"
+   ]
+  },
+  "gen:dram\u0000怎么做根因分析？有哪些常用手段？": {
+   "ref": "共性分析比对机台/chamber/原料/recipe；wafer map 图案分类；结合 SPC 与 WAT 偏移缩小范围",
+   "hits": [
+    "09_equipment_maintenance#2",
+    "03_yield_analysis#1",
+    "03_yield_analysis#0"
+   ]
+  },
+  "gen:dram\u0000数据里缺失值为什么不能用均值直接填？": {
+   "ref": "量测抽检的缺失非随机（测哪些点有工艺原因）；应把缺失作为特征或用同批其他点插补",
+   "hits": [
+    "08_data_analysis#2",
+    "05_metrology_inspection#3",
+    "08_data_analysis#3"
+   ]
+  },
+  "gen:dram\u0000高深宽比结构在清洗和沉积时各有什么难点？": {
+   "ref": "清洗力度过强会因毛细力导致图形倒塌；深宽比越高台阶覆盖率越难保证",
+   "hits": [
+    "10_cleanroom_contamination#2",
+    "04_process_modules#1",
+    "11_glossary#2"
+   ]
+  },
+  "gen:dram\u0000DRAM 器件性能受哪些工艺模块影响？举出耦合路径。": {
+   "ref": "光刻 CD→刻蚀→Vt；膜厚→电容值→刷新特性；CMP 平坦度→光刻焦深→图形缺陷",
+   "hits": [
+    "04_process_modules#2",
+    "04_process_modules#0",
+    "04_process_modules#1"
+   ]
+  },
+  "gen:dram\u0000测试限值为什么不等于 SPEC 限值？": {
+   "ref": "测试设备误差、接触电阻、测试条件无法完全复现客户条件，故设 guard band",
+   "hits": [
+    "12_test_program#0",
+    "07_spc#1",
+    "11_glossary#4"
+   ]
+  },
+  "gen:dram\u0000统计过程控制里，普通原因波动和特殊原因波动有什么区别？": {
+   "ref": "普通原因是过程固有随机波动；特殊原因由可归因异常事件引起，需要干预",
+   "hits": [
+    "07_spc#0",
+    "07_spc#1",
+    "07_spc#3"
+   ]
+  },
+  "gen:dram\u0000为什么参数一多就不能只看单变量控制图了？": {
+   "ref": "多重比较导致误报累积；变量越多越需多变量方法（PCA+T²/SPE）",
+   "hits": [
+    "07_spc#3",
+    "06_apc_r2r_fdc#2",
+    "07_spc#2"
+   ]
+  },
+  "gen:ai_prep\u0000自注意力的复杂度为什么是 O(n²)？": {
+   "ref": "注意力要对每个 token 与所有 token 两两计算相似度，序列长度 n 对应 n×n 个组合；时间与空间复杂度都是 O(n²·d)",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#5",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#4",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#6"
+   ]
+  },
+  "gen:ai_prep\u0000KV Cache 的显存怎么估算？写出公式。": {
+   "ref": "2 × L × n_kv_heads × d_head × seq_len × batch × bytes_per_element；2 是 K/V 两份，bytes 是精度（FP16=2，INT8=1）",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#8",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#7",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#105"
+   ]
+  },
+  "gen:ai_prep\u0000MQA 和 GQA 是为了省什么？": {
+   "ref": "省 KV Cache 显存，不是省参数量；LLaMA-2 70B 用 GQA 把 KV Cache 缩到 MHA 的约 1/8",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#7",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#26",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#6"
+   ]
+  },
+  "gen:ai_prep\u0000RMSNorm 和 LayerNorm 有什么区别？": {
+   "ref": "RMSNorm 去掉均值中心化，只用均方根 x/sqrt(mean(x²)+ε)·γ；少一次减法、少一个 β 参数，更快且效果基本不降",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#14",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#125",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#126"
+   ]
+  },
+  "gen:ai_prep\u0000混合检索里 RRF 的公式是什么？k 取多少？": {
+   "ref": "score(d) = Σ_i 1/(k + rank_i(d))，k 通常取 60；只用排名不用分数，规避两路分数不可比",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#61",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#138",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#60"
+   ]
+  },
+  "gen:ai_prep\u0000近似最近邻（ANN）和维度灾难分别指什么？": {
+   "ref": "ANN 牺牲少量精度换数量级速度提升；维度灾难指维度升高后样本稀疏、距离差异缩小，最近邻与远邻难以区分",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#60",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#223",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#59"
+   ]
+  },
+  "gen:ai_prep\u0000常用的向量相似度度量有哪几种？该选哪个？": {
+   "ref": "余弦相似度、点积、欧氏距离；关键是选择和 embedding 模型训练时一致的度量方式，否则召回明显掉",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#55",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#57",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#56"
+   ]
+  },
+  "gen:ai_prep\u0000一个模型只会按你的指令回一次话，另一个会自己决定下一步做什么，差别在哪？": {
+   "ref": "普通 LLM 应用是「一次调用得到答案」，Agent 是「模型自己决定下一步做什么，不需要人逐步指挥」",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#29",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#28",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#30"
+   ]
+  },
+  "gen:ai_prep\u0000为什么让模型先想再答（CoT）和让它边想边调工具，不是一回事？": {
+   "ref": "CoT 只在推理空间里想，ReAct 的 Thought 之后必须接 Action（调工具）并读 Observation；CoT 可以嵌进 ReAct 的 Thought 里",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#33",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#23",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#198"
+   ]
+  },
+  "gen:ai_prep\u0000如果资料里根本没有答案，怎么让模型老实说不知道、而不是硬编一个？": {
+   "ref": "Prompt 里明确拒答指令（资料中没有就直接回答「资料中未提及」）；配合 RAG 提供证据、结构化输出约束、要求引用，实际项目里组合使用",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#21",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#184",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#182"
+   ]
+  },
+  "gen:ai_prep\u0000模型离线指标很好看，一上线就掉，通常是什么原因？": {
+   "ref": "要区分检索侧幻觉和生成侧幻觉：前者是没检索到或排错，后者是有资料但模型没按资料答；上线掉还要查数据泄漏与分布漂移",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#73",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#72",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#154"
+   ]
+  },
+  "gen:ai_prep\u0000换了新的向量模型之后，为什么不能直接把旧的向量覆盖掉？": {
+   "ref": "新旧 query 与文档向量不在同一语义空间，混用会导致召回崩坏；应做 versioned index，新老索引并行、摄取双写、灰度对比 Recall@k 后再下线旧索引",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#56",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#55",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#157"
+   ]
+  },
+  "gen:ai_prep\u0000为什么向量检索之外还要留一路关键词检索？": {
+   "ref": "向量擅长语义泛化但会糊掉专有名词/型号/错误码，BM25 擅长精确匹配；两路召回互补再融合",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#61",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#60",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#57"
+   ]
+  },
+  "gen:ai_prep\u0000Recall@k 已经很高了，为什么用户还是觉得答不准？": {
+   "ref": "Recall 解决「召回全不全」，排序准不准要靠 rerank；融合后必须接 rerank",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#76",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#190",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#62"
+   ]
+  },
+  "gen:ai_prep\u0000用户问法和文档里的说法完全不一样，怎么提高命中率？": {
+   "ref": "查询改写（Multi-Query）与 HyDE（先生成假想答案再检索）；改写后要做一致性检查，并保留原始 query 作为一路通道",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#184",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#22",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#73"
+   ]
+  },
+  "gen:ai_prep\u0000怎么把「让模型知道新知识」和「让模型学会新行为」这两件事分开处理？": {
+   "ref": "知道新知识用 RAG（改文档即可，实时生效、可追溯）；学会新行为用微调（改变行为模式，需要 GPU + 高质量标注）；按格式输出先试 Prompt",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#23",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#36",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#197"
+   ]
+  },
+  "gen:ai_prep\u0000长任务里 Agent 越跑越偏、忘记原来的目标，怎么防？": {
+   "ref": "上下文漂移；做法包括维护任务清单、阶段性复述目标、Observation 摘要、上下文压缩按优先级裁剪",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#51",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#50",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#44"
+   ]
+  },
+  "gen:ai_prep\u0000微调、RAG、提示工程三者该怎么选？各自的代价是什么？": {
+   "ref": "一句话判据：知道新知识用 RAG；学会新行为用微调；按格式输出先试 Prompt。RAG 不改模型、成本低可追溯；Prompt 零成本但换版本可能失效；微调需 GPU+标注但能稳定行为",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#23",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#22",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#87"
+   ]
+  },
+  "gen:ai_prep\u0000幻觉有哪些缓解手段？哪种最有效？": {
+   "ref": "五板斧按优先级：RAG（最有效）、Function Calling、Structured Output + JSON Schema、Prompt 明确拒答、多轮验证/交叉校验；要区分检索侧与生成侧幻觉",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#21",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#20",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#22"
+   ]
+  },
+  "gen:ai_prep\u0000为什么现在的主流大模型都用 Pre-Norm 加 RMSNorm？": {
+   "ref": "Pre-Norm 让残差路径无归一化、梯度直接流过，训练稳定且深层不需 warmup；RMSNorm 去掉均值中心化，更快且效果基本不降（LLaMA 系全用）",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#14",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#13",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#179"
+   ]
+  },
+  "gen:ai_prep\u0000生产环境里怎么防止 Agent 陷入无限循环？": {
+   "ref": "多层保险：max_iterations 硬上限、重复检测（工具名+参数哈希）、进度判断、Observation 摘要、失败工具冷却、Critic/Controller 节点；「循环是控制问题，不只是提示词问题」",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#44",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#43",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#32"
+   ]
+  },
+  "gen:ai_prep\u0000长上下文窗口越来越大，是不是就不需要 RAG 了？": {
+   "ref": "不是。长上下文的有效利用率远低于标称值，且成本和延迟是平方级的，所以长窗口与 RAG 互补而非替代",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#19",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#18",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#20"
+   ]
+  },
+  "gen:ai_prep\u0000混合检索的两路分数怎么融合？为什么推荐 RRF？": {
+   "ref": "融合方法有 RRF、加权求和、Learning to Rank；RRF 用 score(d)=Σ1/(k+rank_i(d))，k=60，只用排名不用分数，规避两路分数不可比",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#61",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#60",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#66"
+   ]
+  },
+  "gen:ai_prep\u0000手撕自注意力时，哪些细节最容易写错？": {
+   "ref": "缩放因子 1/sqrt(d_k)、causal mask 的位置、softmax 的维度 dim=-1",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#115",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#4",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#148"
+   ]
+  },
+  "gen:ai_prep\u0000向量维度越来越高会带来什么问题？": {
+   "ref": "维度灾难：样本变稀疏、距离差异缩小，最近邻与远邻难区分，暴力搜索和索引都变难（这也是 ANN 存在的原因）",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#60",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#56",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#8"
+   ]
+  },
+  "gen:agent_eval\u0000Transcript 和 Outcome 这两个概念的区别是什么？": {
+   "ref": "Transcript 是 Trial 的完整对话记录（messages + tool calls）；Outcome 是执行后的环境状态和关键指标。Agent 说的≠实际做的，必须验证 Outcome",
+   "hits": [
+    "Agent评测手册#32",
+    "Agent评测手册#4",
+    "Agent评测手册#2"
+   ]
+  },
+  "gen:agent_eval\u0000pass@k 和 pass^k 分别表示什么？": {
+   "ref": "pass@k 是 k 次尝试中至少 1 次成功的概率；pass^k 是 k 次全部成功的概率，适合面向用户的 Agent",
+   "hits": [
+    "Agent评测手册#7",
+    "Agent评测手册#32",
+    "Agent评测手册#1"
+   ]
+  },
+  "gen:agent_eval\u0000Capability Eval 和 Regression Eval 有什么区别？": {
+   "ref": "Capability 问「这 Agent 能做什么」，期望 pass rate 30-50%；Regression 问「还保持着原来的能力吗」，期望接近 100%",
+   "hits": [
+    "Agent评测手册#7",
+    "Agent评测手册#32",
+    "Agent评测手册#25"
+   ]
+  },
+  "gen:agent_eval\u0000Eval Harness 和 Agent Harness 有什么区别？": {
+   "ref": "Eval Harness 是跑评测的基础设施（环境重置、Trial 执行、结果收集）；Agent Harness 是把模型变成 Agent 的框架，两者要分开测",
+   "hits": [
+    "Agent评测手册#4",
+    "Agent评测手册#32",
+    "Agent评测手册#7"
+   ]
+  },
+  "gen:agent_eval\u0000LLM Judge 的 Uncertain Escape Hatch 是什么？为什么必须有？": {
+   "ref": "给 judge 一个「不确定」的出口（如 INSUFFICIENT_INFO），强制它不确定就说不确定；否则等于强迫 LLM 在不确定时乱打分",
+   "hits": [
+    "Agent评测手册#32",
+    "Agent评测手册#33",
+    "Agent评测手册#6"
+   ]
+  },
+  "gen:agent_eval\u0000三层质量门分别测什么、什么频率？": {
+   "ref": "Layer 1 安全底线（blacklist/PII，每条 transcript 实时）、Layer 2 业务 KPI（每天定时）、Layer 3 离线质量（约 150 task suite，每周 + 每次模型升级）",
+   "hits": [
+    "Agent评测手册#14",
+    "Agent评测手册#32",
+    "Agent评测手册#33"
+   ]
+  },
+  "gen:agent_eval\u0000最小的可用 Benchmark 要多少个 task？怎么分配？": {
+   "ref": "150 个：Capability 50 + Regression 50 + Adversarial 30 + Multi-turn Hard 20",
+   "hits": [
+    "Agent评测手册#12",
+    "Agent评测手册#33",
+    "Agent评测手册#25"
+   ]
+  },
+  "gen:agent_eval\u0000τ²-Bench 和 Tau-bench 分别测什么？": {
+   "ref": "τ²-Bench 测航空/零售等真实业务场景（工具+状态+政策）；Tau-bench 测客服场景多轮交互",
+   "hits": [
+    "Agent评测手册#32",
+    "Agent评测手册#17",
+    "Agent评测手册#33"
+   ]
+  },
+  "gen:agent_eval\u0000LoCoMo 的评测维度有哪些？": {
+   "ref": "长时记忆一致性、事实更新后回答是否一致、多轮任务完成情况、时序推理",
+   "hits": [
+    "Agent评测手册#33",
+    "Agent评测手册#18",
+    "Agent评测手册#19"
+   ]
+  },
+  "gen:agent_eval\u0000Agent 在对话里说「订单已创建」，但数据库里其实什么都没有。这类失败该怎么防？": {
+   "ref": "Transcript 欺骗。至少 50% 的 Check 必须验证 Outcome（DB state、API 记录、文件变更），不能只看 Transcript",
+   "hits": [
+    "Agent评测手册#4",
+    "Agent评测手册#20",
+    "Agent评测手册#29"
+   ]
+  },
+  "gen:agent_eval\u0000做自动评分时，什么时候该用确定性判据，什么时候该让模型来打分？": {
+   "ref": "确定性优先：code-based 做守门员拦明显错误，LLM judge 只评语气/风格/完整性等主观维度，human 做校准和关键决策；三种是层层递进不是替换",
+   "hits": [
+    "Agent评测手册#34",
+    "Agent评测手册#6",
+    "Agent评测手册#36"
+   ]
+  },
+  "gen:agent_eval\u0000你怎么判断一次模型升级到底该不该上线？": {
+   "ref": "四级 Ship Gate：Offline Diff（paired comparison + bootstrap CI）→ Shadow Traffic（24h，read divergent transcripts）→ Guardrail-gated A/B → Phased Rollout",
+   "hits": [
+    "Agent评测手册#14",
+    "Agent评测手册#24",
+    "Agent评测手册#23"
+   ]
+  },
+  "gen:agent_eval\u0000为了让 Agent 看似成功，它学会说漂亮话而不是真解决问题，这种情况怎么发现？": {
+   "ref": "这就是 reward hacking（UC Berkeley 发现 8 大 benchmark 都能被 hack 到接近 100%）；对策是 Grader 必须验证 Outcome，且 eval 本身要持续演进（living artifact + 定期 read transcripts）",
+   "hits": [
+    "Agent评测手册#27",
+    "Agent评测手册#20",
+    "Agent评测手册#19"
+   ]
+  },
+  "gen:agent_eval\u0000只靠分数为什么不够，还要人去看执行过程？": {
+   "ref": "分数只告诉你过了没有，不告诉你原因；失败可能集中在某类任务上，不读 transcripts 永远发现不了那个 pattern",
+   "hits": [
+    "Agent评测手册#29",
+    "Agent评测手册#27",
+    "Agent评测手册#35"
+   ]
+  },
+  "gen:agent_eval\u0000同一个 Agent、同一个任务跑十次结果都不一样，这该怎么处理？": {
+   "ref": "非确定性是 Agent 评测的根本挑战之一；应对是每个 task 跑多个 trial（至少 10 次），报均值和置信区间",
+   "hits": [
+    "Agent评测手册#19",
+    "Agent评测手册#24",
+    "Agent评测手册#3"
+   ]
+  },
+  "gen:agent_eval\u0000多轮任务里前面一个小偏差，到后面变成大错，评测该怎么设计？": {
+   "ref": "错误传播（蝴蝶效应）；难点不在第一轮对不对，而在错了之后能不能自己发现并修正——所以要评中间步骤的纠错能力，不只评最终结果",
+   "hits": [
+    "Agent评测手册#19",
+    "Agent评测手册#2",
+    "Agent评测手册#22"
+   ]
+  },
+  "gen:agent_eval\u0000怎么用一个具体的数字说明「每次都要好」比「至少对一次」要求高得多？": {
+   "ref": "pass@k vs pass^k：k=3 时单次成功率 75%，连续 3 次都满意的用户只有 42%",
+   "hits": [
+    "Agent评测手册#7",
+    "Agent评测手册#8",
+    "Agent评测手册#10"
+   ]
+  },
+  "gen:agent_eval\u0000给推荐/排序类 Agent 打分时，用什么指标衡量排序质量？": {
+   "ref": "NDCG@k（考虑位置和相关性等级）、MRR、Recall@k、HitRate@k，另外还有 Intra-list Diversity 与 Catalog Coverage 衡量多样性覆盖",
+   "hits": [
+    "Agent评测手册#21",
+    "Agent评测手册#20",
+    "Agent评测手册#34"
+   ]
+  },
+  "gen:agent_eval\u0000构建评测集时，任务该从哪里来、怎么保证标注质量？": {
+   "ref": "任务来源七步法：Mine（从 production logs／用户投诉／CS escalation 挖掘）/ Cluster（embedding 聚类）/ Sample（按 cluster 采样保证 coverage）/ Reference（标注什么是 pass + reference trace）/ SME + IAA（至少两位 SME 标注，IAA<0.6 就重写 task）/ Balance / Adversarial",
+   "hits": [
+    "Agent评测手册#12",
+    "Agent评测手册#25",
+    "Agent评测手册#34"
+   ]
+  },
+  "gen:agent_eval\u0000评测 Agent 时，Grader 在成本、速度和确定性上怎么权衡？": {
+   "ref": "Code-based 完全确定、毫秒级、极低成本；LLM Judge 非确定、秒级、中等成本；Human 非确定、小时/天级、极高成本",
+   "hits": [
+    "Agent评测手册#26",
+    "Agent评测手册#34",
+    "Agent评测手册#33"
+   ]
+  },
+  "gen:agent_eval\u0000Agent 评测相比 LLM 评测，难点到底难在哪？": {
+   "ref": "五个挑战：非确定性、错误传播（蝴蝶效应）、环境漂移、Reward Hacking、Transcript 欺骗",
+   "hits": [
+    "Agent评测手册#34",
+    "Agent评测手册#19",
+    "Agent评测手册#3"
+   ]
+  },
+  "gen:agent_eval\u0000从跑评测到真的上线，完整流程有哪些阶段？": {
+   "ref": "Anthropic 8 步路线图（Step 0 起步 20-50 task 到 Step 8 living artifact）；上线用四级 Ship Gate",
+   "hits": [
+    "Agent评测手册#24",
+    "Agent评测手册#15",
+    "Agent评测手册#0"
+   ]
+  },
+  "gen:agent_eval\u0000评测里有哪些看起来没问题、其实很致命的坑？": {
+   "ref": "0% pass@100 往往是 task 写错了；不要只看 tool call sequence；LLM judge 不加 escape hatch；用 primary metric 做 early stop 是隐式 p-hacking",
+   "hits": [
+    "Agent评测手册#11",
+    "Agent评测手册#20",
+    "Agent评测手册#34"
+   ]
+  },
+  "gen:agent_eval\u0000主流 Agent 评测 benchmark 各自覆盖什么能力？": {
+   "ref": "SWE-bench Verified（软件工程）、WebArena（真实网页多步）、GAIA（通用助手）、AgentBench（8 类环境广度）、τ²-Bench（真实业务办事）、Tau-bench（客服多轮）、LoCoMo（长对话记忆）",
+   "hits": [
+    "Agent评测手册#17",
+    "Agent评测手册#21",
+    "Agent评测手册#2"
+   ]
+  }
+ },
+ "hard_keys": {
+  "ai_prep\u0000混合检索里 RRF 的公式是什么？k 取多少？\u0000常用的向量相似度度量有余弦相似度（Cosine）、点积（Dot Product）": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "far",
+   "construction": "把「常用的向量相似度度量有哪几种？该选哪个？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "ai_prep\u0000KV Cache 的显存怎么估算？写出公式。\u0000自注意力的复杂度是 O(n²) 的原因在于，输入序列每个 token 都要和其余": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "far",
+   "construction": "把「自注意力的复杂度为什么是 O(n²)？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "ai_prep\u0000幻觉有哪些缓解手段？哪种最有效？\u0000不是，窗口大 ≠ 记忆好。长上下文模型在超长输入上的有效利用率通常远低于标称值，": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "far",
+   "construction": "把「长上下文窗口越来越大，是不是就不需要 RAG 了？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "ai_prep\u0000生产环境里怎么防止 Agent 陷入无限循环？\u0000现在的主流大模型大多使用 Pre-Norm 加 RMSNorm，因为 Pre-N": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "far",
+   "construction": "把「为什么现在的主流大模型都用 Pre-Norm 加 RMSNorm？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "ai_prep\u0000长任务里 Agent 越跑越偏、忘记原来的目标，怎么防？\u0000向量维度越来越高会导致维度灾难，即样本变稀疏、距离差异缩小，'最近邻'和'远邻'": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "far",
+   "construction": "把「向量维度越来越高会带来什么问题？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "agent_eval\u0000三层质量门分别测什么、什么频率？\u0000pass@k 表示 k 次尝试中至少 1 次成功的概率，适合 coding ag": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "far",
+   "construction": "把「pass@k 和 pass^k 分别表示什么？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "agent_eval\u0000最小的可用 Benchmark 要多少个 task？怎么分配？\u0000Agent 评测相比 LLM 评测的难点在于其需要评估系统能否完成任务，而不仅仅": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "far",
+   "construction": "把「Agent 评测相比 LLM 评测，难点到底难在哪？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "agent_eval\u0000Agent 在对话里说「订单已创建」，但数据库里其实什么都没有。这类失败该怎么防？\u0000应对方法是每个 task 跑多个 trial（至少 10 次），并报均值和置信区": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "far",
+   "construction": "把「同一个 Agent、同一个任务跑十次结果都不一样，这该怎么处理？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "agent_eval\u0000LoCoMo 的评测维度有哪些？\u0000只靠分数无法了解 Agent 为什么通过或失败，无法发现潜在的 pattern ": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "far",
+   "construction": "把「只靠分数为什么不够，还要人去看执行过程？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "agent_eval\u0000τ²-Bench 和 Tau-bench 分别测什么？\u0000给推荐/排序类 Agent 打分时，用 NDCG@k 衡量排序质量。": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "far",
+   "construction": "把「给推荐/排序类 Agent 打分时，用什么指标衡量排序质量？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "ai_prep\u0000生产环境里怎么防止 Agent 陷入无限循环？\u0000在长任务中，可以通过以下方法防止 Agent 越跑越偏或忘记原来的目标：1. 每": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "near",
+   "construction": "把「长任务里 Agent 越跑越偏、忘记原来的目标，怎么防？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "agent_eval\u0000最小的可用 Benchmark 要多少个 task？怎么分配？\u0000Capability Eval 和 Regression Eval 的区别在于回": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "near",
+   "construction": "把「Capability Eval 和 Regression Eval 有什么区别？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "agent_eval\u0000τ²-Bench 和 Tau-bench 分别测什么？\u0000主流 Agent 评测 benchmark 各自覆盖的能力如下：\n\n- **SW": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "near",
+   "construction": "把「主流 Agent 评测 benchmark 各自覆盖什么能力？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "agent_eval\u0000做自动评分时，什么时候该用确定性判据，什么时候该让模型来打分？\u0000在评测 Agent 时，Grader 在成本、速度和确定性上需要权衡。code-": {
+   "human_grade_by_construct": "INCORRECT",
+   "group": "near",
+   "construction": "把「评测 Agent 时，Grader 在成本、速度和确定性上怎么权衡？」的答案错配到本题（该答案对原题本身正确）"
+  },
+  "ai_prep\u0000混合检索里 RRF 的公式是什么？k 取多少？\u0000就是对每路检索结果取「1 除以（常数加上它在这一路的排名）」再相加，常数一般用 ": {
+   "human_grade_by_construct": "CORRECT",
+   "group": "paraphrase",
+   "construction": "人工改写为白话答案"
+  },
+  "ai_prep\u0000RMSNorm 和 LayerNorm 有什么区别？\u0000LayerNorm 要减均值再除标准差，RMSNorm 只除以均方根、不减均值，": {
+   "human_grade_by_construct": "CORRECT",
+   "group": "paraphrase",
+   "construction": "人工改写为白话答案"
+  },
+  "ai_prep\u0000近似最近邻（ANN）和维度灾难分别指什么？\u0000ANN 就是不再精确找最近的那个，稍微牺牲点准头换来快几个数量级；维度灾难是说维": {
+   "human_grade_by_construct": "CORRECT",
+   "group": "paraphrase",
+   "construction": "人工改写为白话答案"
+  },
+  "ai_prep\u0000为什么让模型先想再答（CoT）和让它边想边调工具，不是一回事？\u0000前者只是自己闷头推理、不跟外界打交道；后者想完还要真的去调工具、看返回结果再决定": {
+   "human_grade_by_construct": "CORRECT",
+   "group": "paraphrase",
+   "construction": "人工改写为白话答案"
+  },
+  "agent_eval\u0000pass@k 和 pass^k 分别表示什么？\u0000前者是试 k 次里至少成功一次的概率，适合写代码这种一次过就行的任务；后者是 k": {
+   "human_grade_by_construct": "CORRECT",
+   "group": "paraphrase",
+   "construction": "人工改写为白话答案"
+  },
+  "agent_eval\u0000Transcript 和 Outcome 这两个概念的区别是什么？\u0000一个是模型在对话里说的内容（比如声称订单已创建），另一个是环境里真实发生的变化（": {
+   "human_grade_by_construct": "CORRECT",
+   "group": "paraphrase",
+   "construction": "人工改写为白话答案"
+  },
+  "agent_eval\u0000LLM Judge 的 Uncertain Escape Hatch 是什么？为什么必须有？\u0000就是给裁判模型留个「我也拿不准」的选项，不然它被逼着必须给分，就会在没把握的时候": {
+   "human_grade_by_construct": "CORRECT",
+   "group": "paraphrase",
+   "construction": "人工改写为白话答案"
+  },
+  "agent_eval\u0000你怎么判断一次模型升级到底该不该上线？\u0000先在离线任务集上新旧各跑几遍做对比，看有没有显著退步；再让新版本接真实流量但不给": {
+   "human_grade_by_construct": "CORRECT",
+   "group": "paraphrase",
+   "construction": "人工改写为白话答案"
+  },
+  "agent_eval\u0000同一个 Agent、同一个任务跑十次结果都不一样，这该怎么处理？\u0000这就是 Agent 的随机性，测一次没有意义。同一个任务多跑几遍（比如十次），报": {
+   "human_grade_by_construct": "CORRECT",
+   "group": "paraphrase",
+   "construction": "人工改写为白话答案"
+  },
+  "agent_eval\u0000给推荐/排序类 Agent 打分时，用什么指标衡量排序质量？\u0000看排在前面的对不对、排得靠不靠前要用 NDCG，还要看命中率、召回覆盖，另外得看": {
+   "human_grade_by_construct": "CORRECT",
+   "group": "paraphrase",
+   "construction": "人工改写为白话答案"
+  }
+ }
+}

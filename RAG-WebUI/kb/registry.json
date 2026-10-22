@@ -1,0 +1,59 @@
+{
+  "default": "dram",
+  "kbs": [
+    {
+      "id": "dram",
+      "name": "DRAM 制造知识库",
+      "desc": "通用 DRAM 设备与工艺示例文档（12 篇，与公司无关）",
+      "docs": "kb/dram/docs",
+      "index": "kb/dram/index",
+      "eval_dir": "../RAG知识库Agent/demo/eval",
+      "chunk_size": 500,
+      "overlap": 75,
+      "sentence_aware": false,
+      "emoji": "🏭",
+      "examples": [
+        "ALM-1042 报警怎么处理？",
+        "SPC 控制图怎么判断异常？",
+        "为什么实时闭环控制不能用大语言模型？",
+        "ALM-9999 报警码是什么意思？"
+      ]
+    },
+    {
+      "id": "ai_prep",
+      "name": "AI Agent 备考清单",
+      "desc": "AI Agent / 大模型应用技术一面备考清单（LLM 基础、Agent、RAG、部署、手撕题）",
+      "docs": "kb/ai_prep/docs",
+      "index": "kb/ai_prep/index",
+      "chunk_size": 500,
+      "overlap": 75,
+      "sentence_aware": true,
+      "emoji": "🤖",
+      "examples": [
+        "RAG 的常见失败模式有哪些？怎么定位？",
+        "ReAct 和 Plan-and-Execute 有什么区别？",
+        "什么是 pass@k 和 pass^k，为什么 Agent 要用后者？",
+        "向量检索和 BM25 各自擅长什么？为什么要混合？",
+        "大模型微调 LoRA 的原理是什么？"
+      ]
+    },
+    {
+      "id": "agent_eval",
+      "name": "Agent 评测手册",
+      "desc": "Agent 评测 / Benchmark 备战手册（指标体系、benchmark 全景、质量门、工程落地）",
+      "docs": "kb/agent_eval/docs",
+      "index": "kb/agent_eval/index",
+      "chunk_size": 500,
+      "overlap": 75,
+      "sentence_aware": true,
+      "emoji": "📊",
+      "examples": [
+        "Agent 评测和 LLM 评测有什么区别？",
+        "tool use 的评测该怎么设计？",
+        "什么叫 Ship Gate？分几级？",
+        "如何构造 150 task 的 benchmark？",
+        "LLM-as-judge 怎么校准？"
+      ]
+    }
+  ]
+}

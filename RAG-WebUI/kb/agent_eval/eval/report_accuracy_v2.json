@@ -1,0 +1,712 @@
+{
+ "kb": "agent_eval",
+ "prompt_version": "v2",
+ "metrics": {
+  "n_cases": 30,
+  "n_graded": 24,
+  "n_refused": 6,
+  "correct_n": 11,
+  "partial_n": 13,
+  "incorrect_n": 0,
+  "accuracy_mean": 0.7292,
+  "correct_rate": 0.4583,
+  "wrong_or_partial_rate": 0.5417
+ },
+ "cases": [
+  {
+   "q": "Transcript 和 Outcome 这两个概念的区别是什么？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "Transcript 是 Agent 在对话中说的内容，如'订单已创建'；Outcome 是实际执行后的结果，如数据库里 Orders 表是空的。Agent 说的≠实际做的，评估 Agent 不能只看 Transcript，必须验证 Outcome。",
+   "hits": [
+    "Agent评测手册#32",
+    "Agent评测手册#4",
+    "Agent评测手册#2"
+   ],
+   "ref": "Transcript 是 Trial 的完整对话记录（messages + tool calls）；Outcome 是执行后的环境状态和关键指标。Agent 说的≠实际做的，必须验证 Outcome",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了主要概念，但缺少部分关键概念",
+   "missing": "Hard 安全关键题权重最高",
+   "missing_list": [
+    "Hard 安全关键题权重最高"
+   ],
+   "covered_list": [
+    "Transcript 是 Trial 的完整对话记录（messages + tool calls）",
+    "Outcome 是执行后的环境状态和关键指标",
+    "Agent 说的≠实际做的，必须验证 Outcome"
+   ]
+  },
+  {
+   "q": "pass@k 和 pass^k 分别表示什么？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "pass@k 表示 k 次尝试中至少 1 次成功的概率，适合 coding agent，一次过就行，给多次机会衡量最佳情况。pass^k 表示 k 次尝试全部成功的概率，适合 customer-facing agent——每次都必须是好的用户体验。",
+   "hits": [
+    "Agent评测手册#7",
+    "Agent评测手册#32",
+    "Agent评测手册#1"
+   ],
+   "ref": "pass@k 是 k 次尝试中至少 1 次成功的概率；pass^k 是 k 次全部成功的概率，适合面向用户的 Agent",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念。",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "pass@k 是 k 次尝试中至少 1 次成功的概率",
+    "pass@k 适合 coding agent",
+    "pass^k 是 k 次尝试全部成功的概率",
+    "pass^k 适合 customer-facing agent"
+   ]
+  },
+  {
+   "q": "Capability Eval 和 Regression Eval 有什么区别？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "Capability Eval 和 Regression Eval 的区别在于回答的问题不同、期望 pass rate 不同、用途不同以及更新频率不同。Capability Eval 回答的问题是 '这个 Agent 能做什么？'，期望 pass rate 为 30-50%，用于能力爬坡、模型选型和方向判断，更新频率为每次主要模型/架构变更。Regression Eval 回答的问题是 '它还保持着原来的能力吗？'，期望 pass rate 为 ~100%，用于防回退和持续监控，更新频率为每次修改。",
+   "hits": [
+    "Agent评测手册#7",
+    "Agent评测手册#32",
+    "Agent评测手册#25"
+   ],
+   "ref": "Capability 问「这 Agent 能做什么」，期望 pass rate 30-50%；Regression 问「还保持着原来的能力吗」，期望接近 100%",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "回答的问题",
+    "期望 pass rate",
+    "用途",
+    "更新频率"
+   ]
+  },
+  {
+   "q": "Eval Harness 和 Agent Harness 有什么区别？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "Eval Harness 负责跑评测所需的基础设施，包括环境重置、Trial 执行和结果收集。Agent Harness 是把模型变成 Agent 的框架，用于评估模型能力和 Harness 质量。",
+   "hits": [
+    "Agent评测手册#4",
+    "Agent评测手册#32",
+    "Agent评测手册#7"
+   ],
+   "ref": "Eval Harness 是跑评测的基础设施（环境重置、Trial 执行、结果收集）；Agent Harness 是把模型变成 Agent 的框架，两者要分开测",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念。",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "Eval Harness 是跑评测的基础设施（环境重置、Trial 执行、结果收集）",
+    "Agent Harness 是把模型变成 Agent 的框架",
+    "两者要分开测"
+   ]
+  },
+  {
+   "q": "LLM Judge 的 Uncertain Escape Hatch 是什么？为什么必须有？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "LLM Judge 的 Uncertain Escape Hatch 是指在评分时，如果无法确定答案，必须给出一个明确的'不确定'出口（如 INSUFFICIENT_INFO），以确保 LLM 不会强行打分。这必须有，因为这样可以防止 LLM 在不确定的情况下做出错误的判断，从而提高评分的准确性和可靠性 [3]。",
+   "hits": [
+    "Agent评测手册#32",
+    "Agent评测手册#33",
+    "Agent评测手册#6"
+   ],
+   "ref": "给 judge 一个「不确定」的出口（如 INSUFFICIENT_INFO），强制它不确定就说不确定；否则等于强迫 LLM 在不确定时乱打分",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了部分关键概念，但未完全覆盖参考要点中的核心内容",
+   "missing": "强制它不确定就说不确定",
+   "missing_list": [
+    "强制它不确定就说不确定"
+   ],
+   "covered_list": [
+    "Uncertain Escape Hatch（逃生门）",
+    "防止 LLM 在不确定时乱打分"
+   ]
+  },
+  {
+   "q": "三层质量门分别测什么、什么频率？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "三层质量门分别测安全底线、业务 KPI 和离线质量。安全底线的测验频率是每条 transcript 实时，业务 KPI 的测验频率是每天定时，离线质量的测验频率是每周和每次 model upgrade。",
+   "hits": [
+    "Agent评测手册#14",
+    "Agent评测手册#32",
+    "Agent评测手册#33"
+   ],
+   "ref": "Layer 1 安全底线（blacklist/PII，每条 transcript 实时）、Layer 2 业务 KPI（每天定时）、Layer 3 离线质量（约 150 task suite，每周 + 每次模型升级）",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念。",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "安全底线",
+    "业务 KPI",
+    "离线质量",
+    "每条 transcript 实时",
+    "每天定时",
+    "每周和每次 model upgrade"
+   ]
+  },
+  {
+   "q": "最小的可用 Benchmark 要多少个 task？怎么分配？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": false,
+   "answer": "最小的可用 Benchmark 是 150 个 task，分配为：50 个 capability、50 个 regression、30 个 adversarial 和 20 个 multi-turn hard。",
+   "hits": [
+    "Agent评测手册#12",
+    "Agent评测手册#33",
+    "Agent评测手册#25"
+   ],
+   "ref": "150 个：Capability 50 + Regression 50 + Adversarial 30 + Multi-turn Hard 20",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念。",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "150 task",
+    "50 个 capability",
+    "50 个 regression",
+    "30 个 adversarial",
+    "20 个 multi-turn hard"
+   ]
+  },
+  {
+   "q": "τ²-Bench 和 Tau-bench 分别测什么？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "τ²-Bench 测航空/零售等真实业务场景中的工具使用、状态管理和政策遵循，而 Tau-bench 未在资料中提及。",
+   "hits": [
+    "Agent评测手册#32",
+    "Agent评测手册#17",
+    "Agent评测手册#33"
+   ],
+   "ref": "τ²-Bench 测航空/零售等真实业务场景（工具+状态+政策）；Tau-bench 测客服场景多轮交互",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了 τ²-Bench 的评测内容，但未提及 Tau-bench 的评测内容。",
+   "missing": "Tau-bench 测客服场景多轮交互",
+   "missing_list": [
+    "Tau-bench 测客服场景多轮交互"
+   ],
+   "covered_list": [
+    "τ²-Bench 测航空/零售等真实业务场景（工具+状态+政策）"
+   ]
+  },
+  {
+   "q": "LoCoMo 的评测维度有哪些？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "LoCoMo 的核心评测维度包括长时记忆一致性、事实更新后回答是否一致、多轮任务完成情况、时序推理",
+   "hits": [
+    "Agent评测手册#33",
+    "Agent评测手册#18",
+    "Agent评测手册#19"
+   ],
+   "ref": "长时记忆一致性、事实更新后回答是否一致、多轮任务完成情况、时序推理",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有核心评测维度。",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "长时记忆一致性",
+    "事实更新后回答是否一致",
+    "多轮任务完成情况",
+    "时序推理"
+   ]
+  },
+  {
+   "q": "Agent 在对话里说「订单已创建」，但数据库里其实什么都没有。这类失败该怎么防？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "这类失败可以通过至少 50% 的 Check 验证 Outcome，例如检查数据库状态或 API 调用记录，而不是仅依赖 Transcript。",
+   "hits": [
+    "Agent评测手册#4",
+    "Agent评测手册#20",
+    "Agent评测手册#29"
+   ],
+   "ref": "Transcript 欺骗。至少 50% 的 Check 必须验证 Outcome（DB state、API 记录、文件变更），不能只看 Transcript",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "考生答案覆盖了部分关键概念，但未明确提到 'Transcript 欺骗' 这一核心概念。",
+   "missing": "Transcript 欺骗",
+   "missing_list": [
+    "Transcript 欺骗"
+   ],
+   "covered_list": [
+    "至少 50% 的 Check 必须验证 Outcome（DB state、API 记录、文件变更）",
+    "不能只看 Transcript"
+   ]
+  },
+  {
+   "q": "做自动评分时，什么时候该用确定性判据，什么时候该让模型来打分？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "做自动评分时，应优先使用确定性判据，因为确定性判据能提供更准确和一致的评分结果。当需要评估主观性或复杂性较高的维度时，可以使用模型来打分，但必须结合不确定逃生门机制，确保模型在不确定时能明确表示。",
+   "hits": [
+    "Agent评测手册#34",
+    "Agent评测手册#6",
+    "Agent评测手册#36"
+   ],
+   "ref": "确定性优先：code-based 做守门员拦明显错误，LLM judge 只评语气/风格/完整性等主观维度，human 做校准和关键决策；三种是层层递进不是替换",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "考生答案覆盖了部分关键概念，但未提及三种评测方式是层层递进的关系。",
+   "missing": "三种是层层递进不是替换",
+   "missing_list": [
+    "三种是层层递进不是替换"
+   ],
+   "covered_list": [
+    "确定性优先",
+    "code-based 做守门员",
+    "LLM judge 做主观维度评分",
+    "不确定逃生门机制"
+   ]
+  },
+  {
+   "q": "你怎么判断一次模型升级到底该不该上线？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "判断一次模型升级是否该上线，需要通过四层递进的框架进行评估：1. Offline Diff：新旧版本在同样的 task suite 上各跑 5 个 trial，做 paired comparison + bootstrap 置信区间。如果有统计显著的回退，直接打回；2. Shadow Traffic（如果是高风险变更）：新版本接真实流量但不 serve 用户，至少跑 24 小时，人工 read divergent transcripts 找风险；3. Guardrail-gated A/B：10% 流量，看核心指标的同时更关注护栏指标。只用护栏指标做 early stop，不用核心指标做 early stop——否则就是隐式 p-hacking；4. Phased Rollout：1% → 10% → 50% → 100%，每阶段有最小观察时间，自动 rollback 条件预先定义。",
+   "hits": [
+    "Agent评测手册#14",
+    "Agent评测手册#24",
+    "Agent评测手册#23"
+   ],
+   "ref": "四级 Ship Gate：Offline Diff（paired comparison + bootstrap CI）→ Shadow Traffic（24h，read divergent transcripts）→ Guardrail-gated A/B → Phased Rollout",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "Offline Diff（paired comparison + bootstrap CI）",
+    "Shadow Traffic（24h，read divergent transcripts）",
+    "Guardrail-gated A/B",
+    "Phased Rollout"
+   ]
+  },
+  {
+   "q": "为了让 Agent 看似成功，它学会说漂亮话而不是真解决问题，这种情况怎么发现？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "这种情况可以通过不只看 Transcript，还要验证 Outcome 来发现。至少 50% 的 Check 必须验证 Outcome（如 DB state、API 调用记录、文件系统变更），不能全靠 Transcript [2]。",
+   "hits": [
+    "Agent评测手册#27",
+    "Agent评测手册#20",
+    "Agent评测手册#19"
+   ],
+   "ref": "这就是 reward hacking（UC Berkeley 发现 8 大 benchmark 都能被 hack 到接近 100%）；对策是 Grader 必须验证 Outcome，且 eval 本身要持续演进（living artifact + 定期 read transcripts）",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "考生答案提到了验证 Outcome 和不只看 Transcript，但未明确提到 reward hacking 这一核心概念",
+   "missing": "reward hacking",
+   "missing_list": [
+    "reward hacking"
+   ],
+   "covered_list": [
+    "Grader 不能只看 Transcript",
+    "eval 本身需要持续演进",
+    "至少 50% 的 Check 必须验证 Outcome（DB state、API 调用记录、文件系统变更）"
+   ]
+  },
+  {
+   "q": "只靠分数为什么不够，还要人去看执行过程？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "只靠分数无法了解 Agent 为什么通过或失败，无法发现潜在的 pattern 或问题。例如，一个 pass rate 90% 的 Agent 背后的 transcripts 里可能藏着 10% 的失败集中在某类任务上，而如果不读 transcripts，就无法发现这些问题 [1]。此外，分数无法反映执行过程中的具体错误或风险，如 PII 泄漏、医疗/法律建议等安全底线问题 [1]。",
+   "hits": [
+    "Agent评测手册#29",
+    "Agent评测手册#27",
+    "Agent评测手册#35"
+   ],
+   "ref": "分数只告诉你过了没有，不告诉你原因；失败可能集中在某类任务上，不读 transcripts 永远发现不了那个 pattern",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "考生答案覆盖了部分关键概念，但未完整覆盖所有参考要点中的关键概念",
+   "missing": "Offline task suite 无明显 regression；adversarial bucket 通过率不低于基线；成本不超基线 20%；护栏检查通过后才上 10% A/B；Grader 不能只看 Transcript",
+   "missing_list": [
+    "Offline task suite 无明显 regression",
+    "adversarial bucket 通过率不低于基线",
+    "成本不超基线 20%",
+    "护栏检查通过后才上 10% A/B",
+    "Grader 不能只看 Transcript"
+   ],
+   "covered_list": [
+    "只靠分数你只知道'过了还是没过'",
+    "不读 transcripts 永远发现不了那个 pattern",
+    "分数无法反映执行过程中的具体错误或风险"
+   ]
+  },
+  {
+   "q": "同一个 Agent、同一个任务跑十次结果都不一样，这该怎么处理？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "应对方法是每个 task 跑多个 trial（至少 10 次），并报均值和置信区间。",
+   "hits": [
+    "Agent评测手册#19",
+    "Agent评测手册#24",
+    "Agent评测手册#3"
+   ],
+   "ref": "非确定性是 Agent 评测的根本挑战之一；应对是每个 task 跑多个 trial（至少 10 次），报均值和置信区间",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了部分关键概念，但未提及非确定性是 Agent 评测的根本挑战之一",
+   "missing": "非确定性是 Agent 评测的根本挑战之一",
+   "missing_list": [
+    "非确定性是 Agent 评测的根本挑战之一"
+   ],
+   "covered_list": [
+    "每个 task 跑多个 trial（至少 10 次）",
+    "报均值和置信区间"
+   ]
+  },
+  {
+   "q": "多轮任务里前面一个小偏差，到后面变成大错，评测该怎么设计？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "在多轮任务中，前面的小偏差可能在后续步骤中累积成大错误，因此评测设计需要关注中间步骤的纠错能力。具体来说，评测应不仅评估最终结果，还要检查 Agent 在每一步的执行是否准确，是否能够发现并纠正错误。例如，可以设计评测指标来衡量 Agent 在多步交互中的成功率，以及其在遇到错误时的自我修复能力。",
+   "hits": [
+    "Agent评测手册#19",
+    "Agent评测手册#2",
+    "Agent评测手册#22"
+   ],
+   "ref": "错误传播（蝴蝶效应）；难点不在第一轮对不对，而在错了之后能不能自己发现并修正——所以要评中间步骤的纠错能力，不只评最终结果",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了部分关键概念，但未完全覆盖参考答案要点中的核心内容。",
+   "missing": "不只评最终结果",
+   "missing_list": [
+    "不只评最终结果"
+   ],
+   "covered_list": [
+    "错误传播（蝴蝶效应）",
+    "评中间步骤的纠错能力"
+   ]
+  },
+  {
+   "q": "怎么用一个具体的数字说明「每次都要好」比「至少对一次」要求高得多？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "当 k=3 时，单次成功率 75% 意味着只有 42% 的用户连续 3 次都满意，这说明「每次都要好」比「至少对一次」要求高得多 [2]。",
+   "hits": [
+    "Agent评测手册#7",
+    "Agent评测手册#8",
+    "Agent评测手册#10"
+   ],
+   "ref": "pass@k vs pass^k：k=3 时单次成功率 75%，连续 3 次都满意的用户只有 42%",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案准确覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "pass@k vs pass^k",
+    "k=3 时单次成功率 75%，连续 3 次都满意的用户只有 42%"
+   ]
+  },
+  {
+   "q": "给推荐/排序类 Agent 打分时，用什么指标衡量排序质量？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "给推荐/排序类 Agent 打分时，用 NDCG@k 衡量排序质量。",
+   "hits": [
+    "Agent评测手册#21",
+    "Agent评测手册#20",
+    "Agent评测手册#34"
+   ],
+   "ref": "NDCG@k（考虑位置和相关性等级）、MRR、Recall@k、HitRate@k，另外还有 Intra-list Diversity 与 Catalog Coverage 衡量多样性覆盖",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "考生答案只提到了NDCG@k，未覆盖其他关键指标如MRR、Recall@k、HitRate@k、Intra-list Diversity和Catalog Coverage。",
+   "missing": "MRR；Recall@k；HitRate@k；Intra-list Diversity；Catalog Coverage",
+   "missing_list": [
+    "MRR",
+    "Recall@k",
+    "HitRate@k",
+    "Intra-list Diversity",
+    "Catalog Coverage"
+   ],
+   "covered_list": [
+    "NDCG@k"
+   ]
+  },
+  {
+   "q": "构建评测集时，任务该从哪里来、怎么保证标注质量？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "构建评测集时，任务来源于 production logs 和用户投诉，通过 embedding 聚类理解用户意图分布，并按 cluster 采样确保 coverage。标注质量由两位 SME 独立标注，若 IAA < 0.6 则重写 task，同时平衡正负样本并加入 adversarial 压测 case [1]。",
+   "hits": [
+    "Agent评测手册#12",
+    "Agent评测手册#25",
+    "Agent评测手册#34"
+   ],
+   "ref": "任务来源七步法：Mine（从 production logs／用户投诉／CS escalation 挖掘）/ Cluster（embedding 聚类）/ Sample（按 cluster 采样保证 coverage）/ Reference（标注什么是 pass + reference trace）/ SME + IAA（至少两位 SME 标注，IAA<0.6 就重写 task）/ Balance / Adversarial",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了大部分关键概念，但缺少'Reference'（标注什么是 pass 以及 reference trace）这一要点。",
+   "missing": "Reference",
+   "missing_list": [
+    "Reference"
+   ],
+   "covered_list": [
+    "Mine",
+    "Cluster",
+    "Sample",
+    "SME + IAA",
+    "Balance",
+    "Adversarial"
+   ]
+  },
+  {
+   "q": "评测 Agent 时，Grader 在成本、速度和确定性上怎么权衡？",
+   "cat": "C-聚合",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": false,
+   "answer": "在评测 Agent 时，Grader 在成本、速度和确定性上需要权衡。code-based grader 通常具有较高的确定性，但可能成本较高且速度较慢。而 LLM judge 作为主观评分工具，成本较低且速度较快，但确定性较低。因此，评测设计时需要根据具体需求选择合适的 Grader 类型。",
+   "hits": [
+    "Agent评测手册#26",
+    "Agent评测手册#34",
+    "Agent评测手册#33"
+   ],
+   "ref": "Code-based 完全确定、毫秒级、极低成本；LLM Judge 非确定、秒级、中等成本；Human 非确定、小时/天级、极高成本",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了部分关键概念，但未完整涵盖成本、速度和确定性的具体对比",
+   "missing": "毫秒级；中等成本；极高成本；小时/天级",
+   "missing_list": [
+    "毫秒级",
+    "中等成本",
+    "极高成本",
+    "小时/天级"
+   ],
+   "covered_list": [
+    "code-based 完全确定",
+    "LLM Judge 非确定"
+   ]
+  },
+  {
+   "q": "Agent 评测相比 LLM 评测，难点到底难在哪？",
+   "cat": "C-聚合",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "Agent 评测相比 LLM 评测的难点在于其需要评估系统能否完成任务，而不仅仅是模型能否答对。这涉及多个方面，包括非确定性、错误传播、环境漂移和 Reward Hacking 等挑战。此外，评测指标的定义和构造也更为复杂，需要考虑谁来判断'错误'、分母是什么以及测试集如何构造等问题 [2]。",
+   "hits": [
+    "Agent评测手册#34",
+    "Agent评测手册#19",
+    "Agent评测手册#3"
+   ],
+   "ref": "五个挑战：非确定性、错误传播（蝴蝶效应）、环境漂移、Reward Hacking、Transcript 欺骗",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "非确定性",
+    "错误传播（蝴蝶效应）",
+    "环境漂移",
+    "Reward Hacking",
+    "评测指标的定义和构造"
+   ]
+  },
+  {
+   "q": "从跑评测到真的上线，完整流程有哪些阶段？",
+   "cat": "C-聚合",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "从跑评测到真的上线，完整流程包括 Offline Diff、Shadow Traffic、Guardrail-gated A/B 和 Phased Rollout 四个阶段。",
+   "hits": [
+    "Agent评测手册#24",
+    "Agent评测手册#15",
+    "Agent评测手册#0"
+   ],
+   "ref": "Anthropic 8 步路线图（Step 0 起步 20-50 task 到 Step 8 living artifact）；上线用四级 Ship Gate",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的四个阶段。",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "Offline Diff",
+    "Shadow Traffic",
+    "Guardrail-gated A/B",
+    "Phased Rollout"
+   ]
+  },
+  {
+   "q": "评测里有哪些看起来没问题、其实很致命的坑？",
+   "cat": "C-聚合",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "评测里有三个看起来没问题、其实很致命的坑：1. 0% pass@100 往往不是模型不行，是 task 写错了；2. 不要只看 tool call sequence，agent 可能用你想不到的方式正确解决问题；3. LLM judge 不加 uncertain escape hatch 会强迫 LLM 在不确定时乱打分。",
+   "hits": [
+    "Agent评测手册#11",
+    "Agent评测手册#20",
+    "Agent评测手册#34"
+   ],
+   "ref": "0% pass@100 往往是 task 写错了；不要只看 tool call sequence；LLM judge 不加 escape hatch；用 primary metric 做 early stop 是隐式 p-hacking",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了参考答案中的三个关键概念中的前三个，但未覆盖第四个关键概念",
+   "missing": "用 primary metric 做 early stop 是隐式 p-hacking",
+   "missing_list": [
+    "用 primary metric 做 early stop 是隐式 p-hacking"
+   ],
+   "covered_list": [
+    "0% pass@100 往往是 task 写错了",
+    "不要只看 tool call sequence",
+    "LLM judge 不加 escape hatch"
+   ]
+  },
+  {
+   "q": "主流 Agent 评测 benchmark 各自覆盖什么能力？",
+   "cat": "C-聚合",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "主流 Agent 评测 benchmark 各自覆盖的能力如下：\n\n- **SWE-bench Verified**：覆盖软件工程任务（GitHub issue 修复），主要评测 Agent 的多步规划、执行和纠错能力。\n- **WebArena**：覆盖真实网页环境中的多步任务，评测 Agent 的交互模式和在 C 端环境中的任务执行能力。\n- **GAIA**：覆盖通用 AI 助手任务（多步推理+工具），评测 Agent 的综合能力，包括搜索、推理和事实核查。\n- **AgentBench**：覆盖 8 类环境（OS/DB/KG/游戏/网页），评测 Agent 的泛化能力，即在不同环境下的适应性和执行能力。\n- **τ²-Bench**：覆盖航空/零售等真实业务场景（工具+状态+政策），评测 Agent 在复杂业务场景中的任务执行能力，最接近 C 端 Agent 办事场景。\n\n这些 benchmark 的重要性各不相同，其中 τ²-Bench 与小红书场景关联极高，WebArena 和 GAIA 也关联较高，而 SWE-bench Verified 关联较低。",
+   "hits": [
+    "Agent评测手册#17",
+    "Agent评测手册#21",
+    "Agent评测手册#2"
+   ],
+   "ref": "SWE-bench Verified（软件工程）、WebArena（真实网页多步）、GAIA（通用助手）、AgentBench（8 类环境广度）、τ²-Bench（真实业务办事）、Tau-bench（客服多轮）、LoCoMo（长对话记忆）",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "SWE-bench Verified（软件工程）、WebArena（真实网页多步）、GAIA（通用助手）、AgentBench（8 类环境广度）、τ²-Benc"
+   ]
+  },
+  {
+   "q": "Claude 3.5 Sonnet 的 API 每百万 token 多少钱？",
+   "cat": "D-不可回答",
+   "expected_answerable": false,
+   "judged_answerable": false,
+   "retrieval_hit": false,
+   "answer": "资料不足",
+   "grade": "REFUSED",
+   "score": null,
+   "reason": "模型拒答，按预期",
+   "missing": "",
+   "ref": "手册没有 API 定价，应回答资料不足"
+  },
+  {
+   "q": "DeepSeek-V3 一共有多少参数？",
+   "cat": "D-不可回答",
+   "expected_answerable": false,
+   "judged_answerable": false,
+   "retrieval_hit": false,
+   "answer": "资料不足",
+   "grade": "REFUSED",
+   "score": null,
+   "reason": "模型拒答，按预期",
+   "missing": "",
+   "ref": "手册没有 DeepSeek-V3 参数量，应回答资料不足"
+  },
+  {
+   "q": "SWE-bench Verified 上目前最高分是多少？",
+   "cat": "D-不可回答",
+   "expected_answerable": false,
+   "judged_answerable": false,
+   "retrieval_hit": false,
+   "answer": "资料不足",
+   "grade": "REFUSED",
+   "score": null,
+   "reason": "模型拒答，按预期",
+   "missing": "",
+   "ref": "手册只说了该 benchmark 测什么，没有具体分数，应回答资料不足"
+  },
+  {
+   "q": "我们公司上个季度 Agent 业务的营收是多少？",
+   "cat": "D-不可回答",
+   "expected_answerable": false,
+   "judged_answerable": false,
+   "retrieval_hit": false,
+   "answer": "资料不足",
+   "grade": "REFUSED",
+   "score": null,
+   "reason": "模型拒答，按预期",
+   "missing": "",
+   "ref": "手册没有公司经营数据，应回答资料不足"
+  },
+  {
+   "q": "GPT-4o 的上下文窗口具体是多少 token？",
+   "cat": "D-不可回答",
+   "expected_answerable": false,
+   "judged_answerable": false,
+   "retrieval_hit": false,
+   "answer": "资料不足",
+   "grade": "REFUSED",
+   "score": null,
+   "reason": "模型拒答，按预期",
+   "missing": "",
+   "ref": "手册没有 GPT-4o 的具体窗口数值，应回答资料不足"
+  },
+  {
+   "q": "LangSmith 和 Langfuse 的订阅价格差多少？",
+   "cat": "D-不可回答",
+   "expected_answerable": false,
+   "judged_answerable": false,
+   "retrieval_hit": false,
+   "answer": "资料不足",
+   "grade": "REFUSED",
+   "score": null,
+   "reason": "模型拒答，按预期",
+   "missing": "",
+   "ref": "手册没有工具定价，应回答资料不足"
+  }
+ ]
+}

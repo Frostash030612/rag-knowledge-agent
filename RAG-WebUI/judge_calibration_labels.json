@@ -1,0 +1,257 @@
+{
+  "rubric": {
+    "CORRECT": "参考要点里的关键概念在答案里都能找到对应表述，且无事实矛盾。措辞不同、更简略都算 CORRECT。",
+    "PARTIAL": "覆盖了部分关键概念，或漏了要点，但没有说错。含「漏了一个要点」「答了同一主题但没答到点上」。",
+    "INCORRECT": "有关键事实错误（与参考要点矛盾），或答非所问地讲了完全另一套内容（参考要点的核心概念一个都没覆盖）。",
+    "说明": "标注在查看判据结论之前独立完成。等级为有序：INCORRECT < PARTIAL < CORRECT。",
+    "标注批次": "第一批 18 条（含人工挑出的难例），第二批 31 条覆盖两个库的全部剩余作答。"
+  },
+  "grades_order": ["INCORRECT", "PARTIAL", "CORRECT"],
+  "labels": [
+    {
+      "kb": "ai_prep", "q": "自注意力的复杂度为什么是 O(n²)？",
+      "human": "CORRECT",
+      "human_reason": "答出 n×n 两两相似度矩阵、时间空间都是 O(n²·d)，与要点一致。"
+    },
+    {
+      "kb": "ai_prep", "q": "KV Cache 的显存怎么估算？写出公式。",
+      "human": "CORRECT",
+      "human_reason": "公式完整正确。"
+    },
+    {
+      "kb": "ai_prep", "q": "MQA 和 GQA 是为了省什么？",
+      "human": "CORRECT",
+      "human_reason": "点明省 KV Cache 显存、不是省参数量；未提 1/8 属次要细节。"
+    },
+    {
+      "kb": "ai_prep", "q": "RMSNorm 和 LayerNorm 有什么区别？",
+      "human": "CORRECT",
+      "human_reason": "答出去掉均值中心化、仅用均方根、无 β 参数、更快，覆盖要点。"
+    },
+    {
+      "kb": "ai_prep", "q": "混合检索里 RRF 的公式是什么？k 取多少？",
+      "human": "CORRECT",
+      "human_reason": "公式与 k=60 都对。"
+    },
+    {
+      "kb": "ai_prep", "q": "近似最近邻（ANN）和维度灾难分别指什么？",
+      "human": "CORRECT",
+      "human_reason": "两个概念与要点逐条对应。"
+    },
+    {
+      "kb": "ai_prep", "q": "常用的向量相似度度量有哪几种？该选哪个？",
+      "human": "CORRECT",
+      "human_reason": "三种度量都列出，且答出「与 embedding 模型训练时一致」这一关键选择依据。"
+    },
+    {
+      "kb": "ai_prep", "q": "一个模型只会按你的指令回一次话，另一个会自己决定下一步做什么，差别在哪？",
+      "human": "CORRECT",
+      "human_reason": "与「一次调用得答案 vs 模型自己决定下一步」完全对应。"
+    },
+    {
+      "kb": "ai_prep", "q": "为什么让模型先想再答（CoT）和让它边想边调工具，不是一回事？",
+      "human": "CORRECT",
+      "human_reason": "答出 CoT 闭卷推理、ReAct 有 Action/Observation 与外部反馈，与要点一致。"
+    },
+    {
+      "kb": "ai_prep", "q": "如果资料里根本没有答案，怎么让模型老实说不知道、而不是硬编一个？",
+      "human": "CORRECT",
+      "human_reason": "答出 Prompt 明确拒答指令；未展开结构化输出约束属次要遗漏。"
+    },
+    {
+      "kb": "ai_prep", "q": "模型离线指标很好看，一上线就掉，通常是什么原因？",
+      "human": "INCORRECT",
+      "human_reason": "参考要点是「区分检索侧/生成侧幻觉 + 查数据泄漏与分布漂移」，答案答的是「测试集偏差、延迟变长、答案变长、机器腔」——要点里的核心概念一个都没覆盖，属答非所问。"
+    },
+    {
+      "kb": "ai_prep", "q": "换了新的向量模型之后，为什么不能直接把旧的向量覆盖掉？",
+      "human": "PARTIAL",
+      "human_reason": "答出核心原因（新旧向量不在同一语义空间、混用导致召回崩坏），但漏了应对方案 versioned index（并行/双写/灰度）。"
+    },
+    {
+      "kb": "ai_prep", "q": "怎么把「让模型知道新知识」和「让模型学会新行为」这两件事分开处理？",
+      "human": "CORRECT",
+      "human_reason": "知道新知识用 RAG、学会新行为用微调，判据正确。未提 Prompt 属次要遗漏。"
+    },
+    {
+      "kb": "ai_prep", "q": "长任务里 Agent 越跑越偏、忘记原来的目标，怎么防？",
+      "human": "CORRECT",
+      "human_reason": "答出复述目标、阶段自查、上下文压缩等多条做法，覆盖要点方向。"
+    },
+    {
+      "kb": "ai_prep", "q": "微调、RAG、提示工程三者该怎么选？各自的代价是什么？",
+      "human": "CORRECT",
+      "human_reason": "三种选择的判据与各自代价都答到。"
+    },
+    {
+      "kb": "ai_prep", "q": "幻觉有哪些缓解手段？哪种最有效？",
+      "human": "CORRECT",
+      "human_reason": "五板斧全部列出，并明确 RAG 最有效。"
+    },
+    {
+      "kb": "ai_prep", "q": "为什么现在的主流大模型都用 Pre-Norm 加 RMSNorm？",
+      "human": "CORRECT",
+      "human_reason": "答出 Pre-Norm 梯度稳定/免 warmup、RMSNorm 去掉均值中心化更快，覆盖要点。"
+    },
+    {
+      "kb": "ai_prep", "q": "生产环境里怎么防止 Agent 陷入无限循环？",
+      "human": "CORRECT",
+      "human_reason": "六层保险逐条答出，与要点一致。"
+    },
+    {
+      "kb": "ai_prep", "q": "长上下文窗口越来越大，是不是就不需要 RAG 了？",
+      "human": "CORRECT",
+      "human_reason": "答出有效利用率低、成本延迟平方级、互补而非替代。"
+    },
+    {
+      "kb": "ai_prep", "q": "向量维度越来越高会带来什么问题？",
+      "human": "CORRECT",
+      "human_reason": "维度灾难三点（稀疏、距离差异缩小、搜索与索引变难）都对。"
+    },
+    {
+      "kb": "ai_prep", "q": "手撕自注意力时，哪些细节最容易写错？",
+      "human": "PARTIAL",
+      "human_reason": "答出缩放因子、softmax 计算、KQV 操作，但漏了 causal mask 位置与 dim=-1，属遗漏。"
+    },
+    {
+      "kb": "ai_prep", "q": "Recall@k 已经很高了，为什么用户还是觉得答不准？",
+      "human": "PARTIAL",
+      "human_reason": "答案是泛泛的「链路某一步有问题」，未点出「排序准不准靠 rerank」这一考点。"
+    },
+    {
+      "kb": "ai_prep", "q": "混合检索的两路分数怎么融合？为什么推荐 RRF？",
+      "human": "CORRECT",
+      "human_reason": "答出 RRF 公式、k=60、只用排名规避量纲不可比。"
+    },
+    {
+      "kb": "ai_prep", "q": "为什么向量检索之外还要留一路关键词检索？",
+      "human": "CORRECT",
+      "human_reason": "答出 BM25 擅长精确匹配（型号/错误码）、向量擅长语义，两路互补。"
+    },
+    {
+      "kb": "ai_prep", "q": "用户问法和文档里的说法完全不一样，怎么提高命中率？",
+      "human": "INCORRECT",
+      "human_reason": "问的是查询改写/HyDE，答案讲的是表格解析、权限过滤、强制引用、转人工——另一套 RAG 工程实践，要点核心概念均未覆盖。"
+    },
+    {
+      "kb": "agent_eval", "q": "Transcript 和 Outcome 这两个概念的区别是什么？",
+      "human": "CORRECT",
+      "human_reason": "两个概念与「Agent 说的≠实际做的」都答对。"
+    },
+    {
+      "kb": "agent_eval", "q": "pass@k 和 pass^k 分别表示什么？",
+      "human": "CORRECT",
+      "human_reason": "两者定义与适用场景都对。"
+    },
+    {
+      "kb": "agent_eval", "q": "三层质量门分别测什么、什么频率？",
+      "human": "CORRECT",
+      "human_reason": "三层内容与频率全部答对。"
+    },
+    {
+      "kb": "agent_eval", "q": "Capability Eval 和 Regression Eval 有什么区别？",
+      "human": "CORRECT",
+      "human_reason": "两个维度的问题、期望 pass rate、用途、更新频率都答全。"
+    },
+    {
+      "kb": "agent_eval", "q": "Eval Harness 和 Agent Harness 有什么区别？",
+      "human": "CORRECT",
+      "human_reason": "两者定位与职责都答到。"
+    },
+    {
+      "kb": "agent_eval", "q": "做自动评分时，什么时候该用确定性判据，什么时候该让模型来打分？",
+      "human": "PARTIAL",
+      "human_reason": "答出「优先确定性、主观维度用模型」，漏了 human 做校准与关键决策、三种 Grader 层层递进。"
+    },
+    {
+      "kb": "agent_eval", "q": "给推荐/排序类 Agent 打分时，用什么指标衡量排序质量？",
+      "human": "PARTIAL",
+      "human_reason": "只答 NDCG@k，漏了 MRR/Recall@k/HitRate@k 与多样性、覆盖率指标。内容没说错。"
+    },
+    {
+      "kb": "agent_eval", "q": "评测 Agent 时，Grader 在成本、速度和确定性上怎么权衡？",
+      "human": "INCORRECT",
+      "human_reason": "答案称「code-based 可能成本较高且速度较慢；LLM judge 成本较低且速度较快」，与要点（code-based 完全确定、毫秒级、极低成本）关键事实矛盾，非单纯遗漏。"
+    },
+    {
+      "kb": "agent_eval", "q": "Agent 评测相比 LLM 评测，难点到底难在哪？",
+      "human": "PARTIAL",
+      "human_reason": "答出非确定性、错误传播、环境漂移，漏了 Transcript 欺骗与 Reward Hacking。"
+    },
+    {
+      "kb": "agent_eval", "q": "构建评测集时，任务该从哪里来、怎么保证标注质量？",
+      "human": "PARTIAL",
+      "human_reason": "答出 SME 标注与 IAA 门槛，但任务来源七步法（Mine/Cluster/Sample/Reference/Balance/Adversarial）大部分未覆盖。"
+    },
+    {
+      "kb": "agent_eval", "q": "LLM Judge 的 Uncertain Escape Hatch 是什么？为什么必须有？",
+      "human": "PARTIAL",
+      "human_reason": "答出给 judge 不确定出口、避免强行打分，但未点出「否则等于强迫 LLM 在不确定时乱打分」这一后果表述（意思接近但弱）。"
+    },
+    {
+      "kb": "agent_eval", "q": "最小的可用 Benchmark 要多少个 task？怎么分配？",
+      "human": "CORRECT",
+      "human_reason": "150 个与四个 bucket 的分配数量全部正确。注意：判据只给了 PARTIAL(0.5)，属判据偏严。"
+    },
+    {
+      "kb": "agent_eval", "q": "τ²-Bench 和 Tau-bench 分别测什么？",
+      "human": "PARTIAL",
+      "human_reason": "答对 τ²-Bench，但直接说 Tau-bench 未在资料中提及（实际在 #18），漏了「客服场景多轮交互」这个要点。"
+    },
+    {
+      "kb": "agent_eval", "q": "LoCoMo 的评测维度有哪些？",
+      "human": "CORRECT",
+      "human_reason": "四个评测维度与要点完全一致。"
+    },
+    {
+      "kb": "agent_eval", "q": "Agent 在对话里说「订单已创建」，但数据库里其实什么都没有。这类失败该怎么防？",
+      "human": "CORRECT",
+      "human_reason": "答出「至少 50% 的 Check 必须验证 Outcome」，与要点核心一致；未提「Transcript 欺骗」这个名称属次要。"
+    },
+    {
+      "kb": "agent_eval", "q": "你怎么判断一次模型升级到底该不该上线？",
+      "human": "CORRECT",
+      "human_reason": "四级 Ship Gate 及各级做法、停止条件都答全。"
+    },
+    {
+      "kb": "agent_eval", "q": "为了让 Agent 看似成功，它学会说漂亮话而不是真解决问题，这种情况怎么发现？",
+      "human": "PARTIAL",
+      "human_reason": "答出了对策（验证 Outcome、不能只看 Transcript），但未点出这是 reward hacking、也未提 eval 需持续演进。"
+    },
+    {
+      "kb": "agent_eval", "q": "只靠分数为什么不够，还要人去看执行过程？",
+      "human": "CORRECT",
+      "human_reason": "答出分数只知结果不知原因、失败集中在某类任务的 pattern 需要读 transcripts 才能发现。"
+    },
+    {
+      "kb": "agent_eval", "q": "同一个 Agent、同一个任务跑十次结果都不一样，这该怎么处理？",
+      "human": "CORRECT",
+      "human_reason": "答出每个 task 跑多个 trial（至少 10 次）并报均值与置信区间。"
+    },
+    {
+      "kb": "agent_eval", "q": "多轮任务里前面一个小偏差，到后面变成大错，评测该怎么设计？",
+      "human": "CORRECT",
+      "human_reason": "答出错误会累积、要评中间步骤的纠错与自我修复能力，与要点一致。"
+    },
+    {
+      "kb": "agent_eval", "q": "怎么用一个具体的数字说明「每次都要好」比「至少对一次」要求高得多？",
+      "human": "CORRECT",
+      "human_reason": "给出了 k=3、单次 75% → 连续三次 42% 这个具体数字，正是要点要求。"
+    },
+    {
+      "kb": "agent_eval", "q": "从跑评测到真的上线，完整流程有哪些阶段？",
+      "human": "PARTIAL",
+      "human_reason": "只答了上线侧的四级 Ship Gate，漏了「Anthropic 8 步评测路线图」这一半（要点明确包含两者）。"
+    },
+    {
+      "kb": "agent_eval", "q": "评测里有哪些看起来没问题、其实很致命的坑？",
+      "human": "CORRECT",
+      "human_reason": "三个坑逐条答出，与要点一致；漏了 p-hacking 那条属次要。"
+    },
+    {
+      "kb": "agent_eval", "q": "主流 Agent 评测 benchmark 各自覆盖什么能力？",
+      "human": "PARTIAL",
+      "human_reason": "答出 SWE-bench/WebArena/GAIA/AgentBench/τ²-Bench 五个，漏了 Tau-bench 与 LoCoMo，未覆盖全部要点。"
+    }
+  ]
+}

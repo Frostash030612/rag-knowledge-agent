@@ -1,0 +1,74 @@
+{
+ "pool": 40,
+ "baseline_recall@3": 0.8387,
+ "cv_recall@3": 0.871,
+ "cv_gain": 0.0323,
+ "final_config": {
+  "strategy": "max",
+  "alpha": 0.7,
+  "lex_w": 0.0
+ },
+ "final_recall@3_on_evalset": 0.871,
+ "top_configs": [
+  {
+   "strategy": "max",
+   "alpha": 0.7,
+   "lex_w": 0.0,
+   "recall@3": 0.871
+  },
+  {
+   "strategy": "minmax",
+   "alpha": 0.5,
+   "lex_w": 0.0,
+   "recall@3": 0.871
+  },
+  {
+   "strategy": "lex",
+   "alpha": 0.7,
+   "lex_w": 0.0,
+   "recall@3": 0.871
+  },
+  {
+   "strategy": "lex",
+   "alpha": 0.7,
+   "lex_w": 0.1,
+   "recall@3": 0.871
+  },
+  {
+   "strategy": "rrf_pooled",
+   "alpha": 0.2,
+   "lex_w": 0.0,
+   "recall@3": 0.8387
+  },
+  {
+   "strategy": "rrf_pooled",
+   "alpha": 0.3,
+   "lex_w": 0.0,
+   "recall@3": 0.8387
+  },
+  {
+   "strategy": "rrf_pooled",
+   "alpha": 0.4,
+   "lex_w": 0.0,
+   "recall@3": 0.8387
+  },
+  {
+   "strategy": "rrf_pooled",
+   "alpha": 0.5,
+   "lex_w": 0.0,
+   "recall@3": 0.8387
+  },
+  {
+   "strategy": "rrf_pooled",
+   "alpha": 0.6,
+   "lex_w": 0.0,
+   "recall@3": 0.8387
+  },
+  {
+   "strategy": "rrf_pooled",
+   "alpha": 0.7,
+   "lex_w": 0.0,
+   "recall@3": 0.8387
+  }
+ ]
+}

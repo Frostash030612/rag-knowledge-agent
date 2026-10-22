@@ -1,0 +1,26 @@
+# 索引产物与本地环境（不进版本库）
+index/
+*.npy
+
+# 密钥绝对不能提交
+.env
+*.key
+secrets.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# 评测输出（保留 report_compare.json 作为样例，其余忽略）
+eval/report.json
+eval/report_*.json
+!eval/report_compare.json
+
+# 编辑器/系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

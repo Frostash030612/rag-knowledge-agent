@@ -1,0 +1,43 @@
+# 评测集：文档知识库 Agent（扩充版）
+# 字段：q=问题, gold_cids=正确答案所在 chunk, answerable=资料是否足以回答,
+#       ref=参考答案要点, cat=类别
+# 类别：A-精确匹配（关键词检索主场）/ B-语义泛化（向量检索主场）
+#       C-聚合（跨多条）/ D-不可回答（测幻觉）
+{"q": "ALM-1042 报警的触发条件是什么？", "gold_cids": ["02_alarm_manual#0"], "answerable": true, "ref": "腔体压力偏离设定值超过 8% 且持续 3 秒以上", "cat": "A-精确匹配"}
+{"q": "ALM-3310 应该优先排查什么？", "gold_cids": ["02_alarm_manual#1"], "answerable": true, "ref": "先查 MFC 是否需重新标定、气瓶余量；多台机台同时出现则优先排查气体供应系统", "cat": "A-精确匹配"}
+{"q": "MTBF 和 MTTR 分别是什么意思？", "gold_cids": ["09_equipment_maintenance#2", "11_glossary#8"], "answerable": true, "ref": "MTBF 平均无故障工作时间；MTTR 平均修复时间", "cat": "A-精确匹配"}
+{"q": "WAT 和 PCM 是什么？", "gold_cids": ["05_metrology_inspection#3"], "answerable": true, "ref": "晶圆允收测试/工艺控制监控，在晶圆级测器件电学参数", "cat": "A-精确匹配"}
+{"q": "OOC 和 OOS 有什么区别？", "gold_cids": ["07_spc#1", "11_glossary#7"], "answerable": true, "ref": "OOC 针对过程（非随机波动），OOS 针对产品（超出规格限）", "cat": "A-精确匹配"}
+{"q": "Cpk 和 Ppk 的区别是什么？", "gold_cids": ["07_spc#3", "11_glossary#8"], "answerable": true, "ref": "Cpk 用组内标准差并考虑居中，Ppk 用整体标准差反映实际表现", "cat": "A-精确匹配"}
+{"q": "DPPM 是什么指标？", "gold_cids": ["12_test_program#1"], "answerable": true, "ref": "Defective Parts Per Million，每百万件中的不良品数，衡量流出风险", "cat": "A-精确匹配"}
+{"q": "AMC 指什么污染？", "gold_cids": ["10_cleanroom_contamination#0", "10_cleanroom_contamination#1", "11_glossary#8"], "answerable": true, "ref": "Airborne Molecular Contamination，气态分子污染", "cat": "A-精确匹配"}
+{"q": "ISO 5 相当于传统洁净室的哪个等级？", "gold_cids": ["10_cleanroom_contamination#1"], "answerable": true, "ref": "约相当于 Class 100，用于一般前道工序", "cat": "A-精确匹配"}
+{"q": "怎么让工艺在批次之间保持稳定，不要一批一批地漂？", "gold_cids": ["06_apc_r2r_fdc#1"], "answerable": true, "ref": "用 R2R 控制，EWMA 控制器按 u_k = u_(k-1) + K(T − y_k) 更新下一批输入", "cat": "B-语义泛化"}
+{"q": "为什么不能把传感器的整条曲线直接拍平了丢给模型？", "gold_cids": ["08_data_analysis#2"], "answerable": true, "ref": "recipe 分多个 step，各 step 物理机制不同，必须按 step 分段提特征", "cat": "B-语义泛化"}
+{"q": "模型离线看着很好，上线就不准，通常是什么原因造成的？", "gold_cids": ["08_data_analysis#0", "08_data_analysis#1"], "answerable": true, "ref": "数据泄漏，常见于随机切分时序数据、使用未来信息、跨批次统计量归一化", "cat": "B-语义泛化"}
+{"q": "怎么提前发现设备在慢慢变坏，而不是等它坏掉？", "gold_cids": ["09_equipment_maintenance#2"], "answerable": true, "ref": "预测性维护 PdM，预测剩余可用寿命 RUL 并提前安排维护窗口", "cat": "B-语义泛化"}
+{"q": "穿洁净服主要是为了保护谁？", "gold_cids": ["10_cleanroom_contamination#2"], "answerable": true, "ref": "保护产品不被人的颗粒污染，而不是保护人", "cat": "B-语义泛化"}
+{"q": "测量一个具体数值和判断有没有异常，这两类工序有什么本质不同？", "gold_cids": ["05_metrology_inspection#0"], "answerable": true, "ref": "量测输出连续量回答「是多少」；检测输出缺陷数量位置回答「有没有」", "cat": "B-语义泛化"}
+{"q": "什么是虚拟量测，它为什么有必要存在？", "gold_cids": ["05_metrology_inspection#2", "06_apc_r2r_fdc#0"], "answerable": true, "ref": "用设备传感器数据预测无法每片实测的量测值；因为实测是抽检且耗时长", "cat": "B-语义泛化"}
+{"q": "怎么判断一个工艺过程的能力够不够，能不能稳定产出合格品？", "gold_cids": ["07_spc#3"], "answerable": true, "ref": "用过程能力指数 Cp/Cpk/Ppk，注意其与良率的换算依赖正态假设", "cat": "B-语义泛化"}
+{"q": "设备做完维护之后，为什么历史数据不能直接拿来用了？", "gold_cids": ["09_equipment_maintenance#1"], "answerable": true, "ref": "PM 后设备状态跳变，数据分布改变；应把距上次 PM 的时间/片数作为特征或分段建模", "cat": "B-语义泛化"}
+{"q": "为什么刻蚀只是照着光刻的图形做，最后尺寸还是会偏？", "gold_cids": ["04_process_modules#1"], "answerable": true, "ref": "刻蚀速率漂移会叠加到光刻 CD 偏差上，所以刻蚀本身是 CD 偏差的重要来源", "cat": "B-语义泛化"}
+{"q": "APC 的三层分别负责什么？它们怎么构成闭环？", "gold_cids": ["06_apc_r2r_fdc#0"], "answerable": true, "ref": "FDC 检测、VM 观测、R2R 控制；FDC 拦截异常→VM 提供观测值→R2R 调整下一批", "cat": "C-聚合"}
+{"q": "良率损失怎么分类，在晶圆图上怎么体现？", "gold_cids": ["03_yield_analysis#0", "03_yield_analysis#1"], "answerable": true, "ref": "随机缺陷（散点）与系统性失效（规律图案）；靠 wafer map 图案区分", "cat": "C-聚合"}
+{"q": "EWMA 控制器的 K 值取大取小各有什么代价？", "gold_cids": ["06_apc_r2r_fdc#1"], "answerable": true, "ref": "K 大响应快但易受量测噪声影响、输入波动大；K 小平稳但对真实漂移响应慢", "cat": "C-聚合"}
+{"q": "FDC 要同时看哪两个统计量？各自反映什么？", "gold_cids": ["06_apc_r2r_fdc#2"], "answerable": true, "ref": "T² 反映主元空间偏离（变化幅度），SPE/Q 反映残差空间相关结构是否被破坏", "cat": "C-聚合"}
+{"q": "为什么设备报警太多会让系统失效？怎么避免？", "gold_cids": ["06_apc_r2r_fdc#3"], "answerable": true, "ref": "误报过多导致工程师忽略告警；需看报警准确率与提前量，并建立处置结果回流", "cat": "C-聚合"}
+{"q": "怎么做根因分析？有哪些常用手段？", "gold_cids": ["03_yield_analysis#1"], "answerable": true, "ref": "共性分析比对机台/chamber/原料/recipe；wafer map 图案分类；结合 SPC 与 WAT 偏移缩小范围", "cat": "C-聚合"}
+{"q": "数据里缺失值为什么不能用均值直接填？", "gold_cids": ["08_data_analysis#1", "05_metrology_inspection#3"], "answerable": true, "ref": "量测抽检的缺失非随机（测哪些点有工艺原因）；应把缺失作为特征或用同批其他点插补", "cat": "C-聚合"}
+{"q": "高深宽比结构在清洗和沉积时各有什么难点？", "gold_cids": ["04_process_modules#2", "10_cleanroom_contamination#2"], "answerable": true, "ref": "清洗力度过强会因毛细力导致图形倒塌；深宽比越高台阶覆盖率越难保证", "cat": "C-聚合"}
+{"q": "DRAM 器件性能受哪些工艺模块影响？举出耦合路径。", "gold_cids": ["04_process_modules#0", "04_process_modules#2"], "answerable": true, "ref": "光刻 CD→刻蚀→Vt；膜厚→电容值→刷新特性；CMP 平坦度→光刻焦深→图形缺陷", "cat": "C-聚合"}
+{"q": "测试限值为什么不等于 SPEC 限值？", "gold_cids": ["12_test_program#1"], "answerable": true, "ref": "测试设备误差、接触电阻、测试条件无法完全复现客户条件，故设 guard band", "cat": "C-聚合"}
+{"q": "统计过程控制里，普通原因波动和特殊原因波动有什么区别？", "gold_cids": ["07_spc#0"], "answerable": true, "ref": "普通原因是过程固有随机波动；特殊原因由可归因异常事件引起，需要干预", "cat": "C-聚合"}
+{"q": "为什么参数一多就不能只看单变量控制图了？", "gold_cids": ["07_spc#3"], "answerable": true, "ref": "多重比较导致误报累积；变量越多越需多变量方法（PCA+T²/SPE）", "cat": "C-聚合"}
+{"q": "我们厂用的光刻机是 ASML 的哪一款型号？", "gold_cids": [], "answerable": false, "ref": "资料中没有具体设备型号，应回答资料不足", "cat": "D-不可回答"}
+{"q": "请给出我们公司上季度的具体营收和毛利率数据。", "gold_cids": [], "answerable": false, "ref": "资料中没有财务数据，应回答资料不足", "cat": "D-不可回答"}
+{"q": "ALM-9999 这个报警码代表什么？", "gold_cids": [], "answerable": false, "ref": "资料中没有 ALM-9999，应回答资料不足", "cat": "D-不可回答"}
+{"q": "洁净室空调系统的具体能耗是多少千瓦时？", "gold_cids": [], "answerable": false, "ref": "资料中没有能耗数据，应回答资料不足", "cat": "D-不可回答"}
+{"q": "对比一下长鑫存储和三星在 DRAM 工艺上的具体差异。", "gold_cids": [], "answerable": false, "ref": "资料中没有两家公司的工艺对比，应回答资料不足", "cat": "D-不可回答"}
+{"q": "请给出我们厂 2025 年第四季度的整体良率数字。", "gold_cids": [], "answerable": false, "ref": "资料中没有具体良率数字，应回答资料不足", "cat": "D-不可回答"}
+{"q": "EUV 光刻的曝光波长是多少纳米？", "gold_cids": [], "answerable": false, "ref": "资料中没有提到 EUV 波长数值，应回答资料不足", "cat": "D-不可回答"}

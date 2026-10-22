@@ -1,0 +1,718 @@
+{
+ "kb": "ai_prep",
+ "prompt_version": "v2",
+ "metrics": {
+  "n_cases": 30,
+  "n_graded": 25,
+  "n_refused": 5,
+  "correct_n": 13,
+  "partial_n": 12,
+  "incorrect_n": 0,
+  "accuracy_mean": 0.76,
+  "correct_rate": 0.52,
+  "wrong_or_partial_rate": 0.48
+ },
+ "cases": [
+  {
+   "q": "自注意力的复杂度为什么是 O(n²)？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "自注意力的复杂度是 O(n²) 的原因在于，输入序列每个 token 都要和其余 n 个 token 算相关性，产生 n×n 的注意力矩阵。计算 QKᵀ 的过程需要进行 n×n 的矩阵乘法，因此时间和空间复杂度都是 O(n²·d) [1]。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#5",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#4",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#6"
+   ],
+   "ref": "注意力要对每个 token 与所有 token 两两计算相似度，序列长度 n 对应 n×n 个组合；时间与空间复杂度都是 O(n²·d)",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "考生答案覆盖了大部分关键概念，但未明确提到序列长度 n 对应 n×n 个组合",
+   "missing": "序列长度 n 对应 n×n 个组合",
+   "missing_list": [
+    "序列长度 n 对应 n×n 个组合"
+   ],
+   "covered_list": [
+    "每个 token 都要和其余 n 个 token 算相关性",
+    "产生 n×n 的注意力矩阵",
+    "时间和空间复杂度都是 O(n²·d)"
+   ]
+  },
+  {
+   "q": "KV Cache 的显存怎么估算？写出公式。",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "KV Cache 显存 = 2 × L × n_kv_heads × d_head × seq_len × batch × bytes_per_element",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#8",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#7",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#105"
+   ],
+   "ref": "2 × L × n_kv_heads × d_head × seq_len × batch × bytes_per_element；2 是 K/V 两份，bytes 是精度（FP16=2，INT8=1）",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了公式的主要部分，但未提及精度相关的 bytes_per_element 说明",
+   "missing": "bytes 是精度（FP16=2，INT8=1）",
+   "missing_list": [
+    "bytes 是精度（FP16=2，INT8=1）"
+   ],
+   "covered_list": [
+    "2 × L × n_kv_heads × d_head × seq_len × batch × bytes_per_element"
+   ]
+  },
+  {
+   "q": "MQA 和 GQA 是为了省什么？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "MQA 和 GQA 是为了省 KV Cache 显存。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#7",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#26",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#6"
+   ],
+   "ref": "省 KV Cache 显存，不是省参数量；LLaMA-2 70B 用 GQA 把 KV Cache 缩到 MHA 的约 1/8",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "省 KV Cache 显存",
+    "LLaMA-2 70B 用 GQA 把 KV Cache 缩到 MHA 的约 1/8"
+   ]
+  },
+  {
+   "q": "RMSNorm 和 LayerNorm 有什么区别？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "RMSNorm 和 LayerNorm 的主要区别在于归一化的方式和参数数量。LayerNorm 对输入进行均值中心化和方差归一化，公式为：(x - mean) / torch.sqrt(var + self.eps) * self.gamma + self.beta。而 RMSNorm 只进行均方根归一化，公式为：x / rms * self.weight，其中 rms = torch.sqrt(x.pow(2).mean(-1, keepdim=True) + self.eps)。此外，RMSNorm 没有 β 参数，只保留 γ 参数，因此参数更少，计算更快。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#14",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#125",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#126"
+   ],
+   "ref": "RMSNorm 去掉均值中心化，只用均方根 x/sqrt(mean(x²)+ε)·γ；少一次减法、少一个 β 参数，更快且效果基本不降",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "考生答案覆盖了大部分关键概念，但未提及 Pre-Norm 的相关内容。",
+   "missing": "Pre-Norm",
+   "missing_list": [
+    "Pre-Norm"
+   ],
+   "covered_list": [
+    "去掉均值中心化",
+    "只用均方根 x/sqrt(mean(x²)+ε)·γ",
+    "少一次减法",
+    "少一个 β 参数",
+    "更快"
+   ]
+  },
+  {
+   "q": "混合检索里 RRF 的公式是什么？k 取多少？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "混合检索中 RRF 的公式是 `score(d) = Σ_i 1 / (k + rank_i(d))`，其中 `k` 通常取 60 [1]。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#61",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#138",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#60"
+   ],
+   "ref": "score(d) = Σ_i 1/(k + rank_i(d))，k 通常取 60；只用排名不用分数，规避两路分数不可比",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "正确回答了 RRF 公式和 k 的取值",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "score(d) = Σ_i 1/(k + rank_i(d))",
+    "k 通常取 60"
+   ]
+  },
+  {
+   "q": "近似最近邻（ANN）和维度灾难分别指什么？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "近似最近邻（ANN）是指在向量检索中牺牲少量精度以换取数量级速度提升的技术，是向量检索的核心 trade-off [3]。维度灾难是指随着维度升高，样本变得稀疏，距离差异缩小，'最近邻'和'远邻'难以区分，导致暴力搜索和索引都变难 [1]。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#60",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#223",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#59"
+   ],
+   "ref": "ANN 牺牲少量精度换数量级速度提升；维度灾难指维度升高后样本稀疏、距离差异缩小，最近邻与远邻难以区分",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "ANN 牺牲少量精度换数量级速度提升",
+    "维度灾难指维度升高后样本稀疏、距离差异缩小，'最近邻'和'远邻'难以区分"
+   ]
+  },
+  {
+   "q": "常用的向量相似度度量有哪几种？该选哪个？",
+   "cat": "A-精确匹配",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "常用的向量相似度度量有余弦相似度（Cosine）、点积（Dot Product）和欧氏距离（L2）。选择哪个取决于 embedding 模型训练时使用的度量方式，以确保语义空间的一致性 [1]。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#55",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#57",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#56"
+   ],
+   "ref": "余弦相似度、点积、欧氏距离；关键是选择和 embedding 模型训练时一致的度量方式，否则召回明显掉",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "正确覆盖了所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "余弦相似度、点积、欧氏距离；关键是选择和 embedding 模型训练时一致的度量方式，否则召回明显掉"
+   ]
+  },
+  {
+   "q": "一个模型只会按你的指令回一次话，另一个会自己决定下一步做什么，差别在哪？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "一个模型只会按你的指令回一次话，属于普通 LLM 应用，是「一次调用得到答案」；另一个会自己决定下一步做什么，属于 AI Agent，是「模型自己决定下一步做什么，不需要人逐步指挥」。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#29",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#28",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#30"
+   ],
+   "ref": "普通 LLM 应用是「一次调用得到答案」，Agent 是「模型自己决定下一步做什么，不需要人逐步指挥」",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案准确覆盖了参考答案要点中的所有关键概念。",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "一次调用得到答案",
+    "模型自己决定下一步做什么，不需要人逐步指挥"
+   ]
+  },
+  {
+   "q": "为什么让模型先想再答（CoT）和让它边想边调工具，不是一回事？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "让模型先想再答（CoT）和让它边想边调工具（ReAct）不是一回事，因为它们在是否依赖外部环境、输出内容和纠错来源上有本质区别。CoT 是闭卷推理，不涉及外部工具或环境，输出纯推理链文字，纠错主要靠模型自省；而 ReAct 是推理与行动的闭环，有外部工具和观察反馈，输出包含 Thought、Action 和 Observation 交替，纠错主要靠外部真实反馈。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#33",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#23",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#198"
+   ],
+   "ref": "CoT 只在推理空间里想，ReAct 的 Thought 之后必须接 Action（调工具）并读 Observation；CoT 可以嵌进 ReAct 的 Thought 里",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了部分关键概念，但未覆盖所有要点",
+   "missing": "是否能嵌进 ReAct 的 Thought 里；典型目标；幻觉风险",
+   "missing_list": [
+    "是否能嵌进 ReAct 的 Thought 里",
+    "典型目标",
+    "幻觉风险"
+   ],
+   "covered_list": [
+    "是否有外部环境",
+    "输出内容",
+    "纠错来源"
+   ]
+  },
+  {
+   "q": "如果资料里根本没有答案，怎么让模型老实说不知道、而不是硬编一个？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "如果资料里根本没有答案，可以通过在 Prompt 中明确要求模型如果资料中没有相关信息，直接回答『资料中未提及』来缓解。这种方法虽不 100% 有效，但能显著降低编造率 [1]。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#21",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#184",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#182"
+   ],
+   "ref": "Prompt 里明确拒答指令（资料中没有就直接回答「资料中未提及」）；配合 RAG 提供证据、结构化输出约束、要求引用，实际项目里组合使用",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了部分关键概念，但未涵盖所有要点",
+   "missing": "配合 RAG 提供证据；结构化输出约束；要求引用；实际项目里组合使用",
+   "missing_list": [
+    "配合 RAG 提供证据",
+    "结构化输出约束",
+    "要求引用",
+    "实际项目里组合使用"
+   ],
+   "covered_list": [
+    "Prompt 明确拒答"
+   ]
+  },
+  {
+   "q": "模型离线指标很好看，一上线就掉，通常是什么原因？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": false,
+   "answer": "通常原因包括测试集偏差、延迟变长、答案变长或机器腔。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#73",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#72",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#154"
+   ],
+   "ref": "要区分检索侧幻觉和生成侧幻觉：前者是没检索到或排错，后者是有资料但模型没按资料答；上线掉还要查数据泄漏与分布漂移",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了部分关键概念，但未提及检索侧幻觉和生成侧幻觉，以及数据泄漏与分布漂移。",
+   "missing": "区分检索侧幻觉和生成侧幻觉；数据泄漏与分布漂移",
+   "missing_list": [
+    "区分检索侧幻觉和生成侧幻觉",
+    "数据泄漏与分布漂移"
+   ],
+   "covered_list": [
+    "测试集偏差",
+    "延迟变长",
+    "答案变长/机器腔"
+   ]
+  },
+  {
+   "q": "换了新的向量模型之后，为什么不能直接把旧的向量覆盖掉？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "换了新的向量模型之后，不能直接把旧的向量覆盖掉，因为新 query 向量和旧文档向量可能不在同一语义空间，混用会导致召回崩坏。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#56",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#55",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#157"
+   ],
+   "ref": "新旧 query 与文档向量不在同一语义空间，混用会导致召回崩坏；应做 versioned index，新老索引并行、摄取双写、灰度对比 Recall@k 后再下线旧索引",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "答对了主要部分，但漏了关键概念",
+   "missing": "应做 versioned index，新老索引并行、摄取双写、灰度对比 Recall@k 后再下线旧索引",
+   "missing_list": [
+    "应做 versioned index，新老索引并行、摄取双写、灰度对比 Recall@k 后再下线旧索引"
+   ],
+   "covered_list": [
+    "新 query 向量和旧文档向量不在同一语义空间，混用会导致召回崩坏"
+   ]
+  },
+  {
+   "q": "为什么向量检索之外还要留一路关键词检索？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "向量检索之外还要留一路关键词检索，是因为关键词检索（如 BM25）擅长处理精确匹配的场景，例如法律条款号、产品型号、错误码、专有名词和缩写等，而向量检索更侧重语义相似匹配，对同义表达和跨语言更稳。因此，混合检索可以同时利用两者的优点，提高召回的全面性和准确性 [1]。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#61",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#60",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#57"
+   ],
+   "ref": "向量擅长语义泛化但会糊掉专有名词/型号/错误码，BM25 擅长精确匹配；两路召回互补再融合",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "BM25 擅长精确匹配",
+    "向量擅长语义泛化但会糊掉专有名词/型号/错误码",
+    "两路召回互补再融合"
+   ]
+  },
+  {
+   "q": "Recall@k 已经很高了，为什么用户还是觉得答不准？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "Recall@k 已经很高了，但用户仍然觉得答不准，可能是因为中间答案的准确率不足，或者端到端的最终答案正确率不够。这说明链路的某一步可能存在问题，例如检索阶段的语义不完整、向量库的精度不足，或者重排序阶段未能有效提升排序质量。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#76",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#190",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#62"
+   ],
+   "ref": "Recall 解决「召回全不全」，排序准不准要靠 rerank；融合后必须接 rerank",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "考生答案部分覆盖了参考要点中的关键概念，但未明确提到 Recall@k 与排序准确性的关系及融合后必须接 rerank 的核心观点。",
+   "missing": "Recall@k 解决「召回全不全」；排序准不准要靠 rerank；融合后必须接 rerank",
+   "missing_list": [
+    "Recall@k 解决「召回全不全」",
+    "排序准不准要靠 rerank",
+    "融合后必须接 rerank"
+   ],
+   "covered_list": [
+    "链路的每一步是否正确",
+    "端到端的最终答案正确率",
+    "重排序阶段未能有效提升排序质量"
+   ]
+  },
+  {
+   "q": "用户问法和文档里的说法完全不一样，怎么提高命中率？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": false,
+   "answer": "可以通过 Layout-aware 解析和表格结构化来处理文档中的表格和图纸，同时在检索层前置权限过滤以确保不引用过期版本。此外，可以采用强制引用机制和拒答机制，防止模型编造工艺参数，并通过高风险查询转人工来提高命中率。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#184",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#22",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#73"
+   ],
+   "ref": "查询改写（Multi-Query）与 HyDE（先生成假想答案再检索）；改写后要做一致性检查，并保留原始 query 作为一路通道",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了部分关键概念，但未提及查询改写和一致性检查等核心要点",
+   "missing": "查询改写（Multi-Query）与 HyDE（先生成假想答案再检索）；改写后要做一致性检查；保留原始 query 作为一路通道",
+   "missing_list": [
+    "查询改写（Multi-Query）与 HyDE（先生成假想答案再检索）",
+    "改写后要做一致性检查",
+    "保留原始 query 作为一路通道"
+   ],
+   "covered_list": [
+    "Layout-aware 解析 + 表格结构化",
+    "检索层前置权限过滤",
+    "强制引用 + 拒答机制 + 高风险转人工"
+   ]
+  },
+  {
+   "q": "怎么把「让模型知道新知识」和「让模型学会新行为」这两件事分开处理？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "通过使用 RAG 来让模型知道新知识，使用微调（SFT/LoRA）来让模型学会新行为。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#23",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#36",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#197"
+   ],
+   "ref": "知道新知识用 RAG（改文档即可，实时生效、可追溯）；学会新行为用微调（改变行为模式，需要 GPU + 高质量标注）；按格式输出先试 Prompt",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了主要概念，但缺少按格式输出先试 Prompt 的关键点",
+   "missing": "按格式输出先试 Prompt",
+   "missing_list": [
+    "按格式输出先试 Prompt"
+   ],
+   "covered_list": [
+    "让模型「知道新知识」用 RAG",
+    "让模型「学会新行为」用微调"
+   ]
+  },
+  {
+   "q": "长任务里 Agent 越跑越偏、忘记原来的目标，怎么防？",
+   "cat": "B-语义泛化",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "在长任务中，可以通过以下方法防止 Agent 越跑越偏或忘记原来的目标：1. 每轮注入原始目标，通过 System Prompt 或用户消息重复原始需求；2. 阶段性自查，要求 Agent 每执行几步就总结当前进度和剩余任务；3. 外部监督 Agent，使用独立的检查 Agent 监控主 Agent 的执行轨迹；4. 任务分解 + 契约化，将长任务拆分为短任务，每个短任务有明确的输入输出定义；5. 上下文压缩，用摘要替代原始对话，释放窗口空间。此外，还可以给每条注入的信息打「优先级标签」，如 goal / constraint / preference / history，压缩时按优先级裁剪 [1]。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#51",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#50",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#44"
+   ],
+   "ref": "上下文漂移；做法包括维护任务清单、阶段性复述目标、Observation 摘要、上下文压缩按优先级裁剪",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "上下文漂移",
+    "维护任务清单",
+    "阶段性复述目标",
+    "Observation 摘要",
+    "上下文压缩按优先级裁剪"
+   ]
+  },
+  {
+   "q": "微调、RAG、提示工程三者该怎么选？各自的代价是什么？",
+   "cat": "C-聚合",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "微调、RAG 和提示工程的选择依据是：让模型「知道新知识」用 RAG；让模型「学会新行为」用微调；让模型「按格式输出」先试提示工程。微调的代价是需要 GPU 和高质量标注数据，成本高；RAG 的代价是成本低、可追溯、可权限控制，但不能保证模型按你想要的\"方式\"思考；提示工程的代价是零成本、最快验证，但不稳定，模型换版本可能失效。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#23",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#22",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#87"
+   ],
+   "ref": "一句话判据：知道新知识用 RAG；学会新行为用微调；按格式输出先试 Prompt。RAG 不改模型、成本低可追溯；Prompt 零成本但换版本可能失效；微调需 GPU+标注但能稳定行为",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "知道新知识用 RAG",
+    "学会新行为用微调",
+    "按格式输出先试 Prompt",
+    "RAG 不改模型",
+    "RAG 成本低可追溯",
+    "Prompt 零成本但换版本可能失效",
+    "微调需 GPU+标注但能稳定行为"
+   ]
+  },
+  {
+   "q": "幻觉有哪些缓解手段？哪种最有效？",
+   "cat": "C-聚合",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "幻觉的缓解手段包括 RAG、Function Calling、Structured Output + JSON Schema、Prompt 明确拒答和多轮验证 / 交叉校验。其中 RAG 是最有效的手段。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#21",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#20",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#22"
+   ],
+   "ref": "五板斧按优先级：RAG（最有效）、Function Calling、Structured Output + JSON Schema、Prompt 明确拒答、多轮验证/交叉校验；要区分检索侧与生成侧幻觉",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "RAG（最有效）",
+    "Function Calling",
+    "Structured Output + JSON Schema",
+    "Prompt 明确拒答",
+    "多轮验证/交叉校验"
+   ]
+  },
+  {
+   "q": "为什么现在的主流大模型都用 Pre-Norm 加 RMSNorm？",
+   "cat": "C-聚合",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "现在的主流大模型大多使用 Pre-Norm 加 RMSNorm，因为 Pre-Norm 能让梯度更稳定地流动，训练深层网络时不需要 warmup，而 RMSNorm 去掉了 LayerNorm 的均值中心化，只使用均方根，减少了计算步骤和参数，速度更快且效果基本不降。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#14",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#13",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#179"
+   ],
+   "ref": "Pre-Norm 让残差路径无归一化、梯度直接流过，训练稳定且深层不需 warmup；RMSNorm 去掉均值中心化，更快且效果基本不降（LLaMA 系全用）",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "Pre-Norm 让残差路径无归一化、梯度直接流过，训练稳定且深层不需 warmup",
+    "RMSNorm 去掉均值中心化，更快且效果基本不降"
+   ]
+  },
+  {
+   "q": "生产环境里怎么防止 Agent 陷入无限循环？",
+   "cat": "C-聚合",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "生产环境里防止 Agent 陷入无限循环的方法包括：设置 `max_iterations` 硬上限、重复检测（记录最近几步的 `(工具名, 参数哈希)`，重复调用去重并告警）、进度判断（要求模型每轮显式回答「我是否获得了足够信息」，无新增信息就升级跳出）、Observation 摘要（工具结果先摘要再入上下文，避免上下文越滚越乱导致模型迷失）、失败工具冷却/禁用（连续失败 N 次的工具进入冷却，防止反复撞墙）、Critic / Controller 节点（独立的判断器监控轨迹是否仍在朝目标前进）[1]。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#44",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#43",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#32"
+   ],
+   "ref": "多层保险：max_iterations 硬上限、重复检测（工具名+参数哈希）、进度判断、Observation 摘要、失败工具冷却、Critic/Controller 节点；「循环是控制问题，不只是提示词问题」",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "max_iterations 硬上限",
+    "重复检测（工具名+参数哈希）",
+    "进度判断",
+    "Observation 摘要",
+    "失败工具冷却/禁用",
+    "Critic/Controller 节点"
+   ]
+  },
+  {
+   "q": "长上下文窗口越来越大，是不是就不需要 RAG 了？",
+   "cat": "C-聚合",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "不是，窗口大 ≠ 记忆好。长上下文模型在超长输入上的有效利用率通常远低于标称值，且成本和延迟是平方级的。所以长窗口和 RAG 是互补而非替代 [1]。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#19",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#18",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#20"
+   ],
+   "ref": "不是。长上下文的有效利用率远低于标称值，且成本和延迟是平方级的，所以长窗口与 RAG 互补而非替代",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "窗口大 ≠ 记忆好",
+    "有效利用率远低于标称值",
+    "成本和延迟是平方级的",
+    "长窗口与 RAG 互补而非替代"
+   ]
+  },
+  {
+   "q": "混合检索的两路分数怎么融合？为什么推荐 RRF？",
+   "cat": "C-聚合",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "混合检索的两路分数通过 RRF（Reciprocal Rank Fusion，倒数排名融合）进行融合，其公式为 `score(d) = Σ_i 1 / (k + rank_i(d))`，其中 `k` 通常取 60。RRF 只用排名不用分数，天然规避了两路分数不可比的问题，因此推荐使用 RRF [1]。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#61",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#60",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#66"
+   ],
+   "ref": "融合方法有 RRF、加权求和、Learning to Rank；RRF 用 score(d)=Σ1/(k+rank_i(d))，k=60，只用排名不用分数，规避两路分数不可比",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "覆盖了部分关键概念，但未覆盖所有关键概念",
+   "missing": "加权求和；Learning to Rank",
+   "missing_list": [
+    "加权求和",
+    "Learning to Rank"
+   ],
+   "covered_list": [
+    "融合方法有 RRF、加权求和、Learning to Rank",
+    "RRF 用 score(d)=Σ1/(k+rank_i(d))，k=60",
+    "只用排名不用分数，规避两路分数不可比"
+   ]
+  },
+  {
+   "q": "手撕自注意力时，哪些细节最容易写错？",
+   "cat": "C-聚合",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": false,
+   "answer": "手撕自注意力时，最容易写错的细节包括：矩阵维度的处理、缩放因子的使用、softmax 的计算方式以及对键、值、查询矩阵的正确操作 [1]。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#115",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#4",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#148"
+   ],
+   "ref": "缩放因子 1/sqrt(d_k)、causal mask 的位置、softmax 的维度 dim=-1",
+   "grade": "PARTIAL",
+   "score": 0.5,
+   "reason": "考生答案覆盖了缩放因子，但未提及因果掩码的位置和softmax的维度，因此未完全覆盖参考要点。",
+   "missing": "causal mask 的位置；softmax 的维度 dim=-1",
+   "missing_list": [
+    "causal mask 的位置",
+    "softmax 的维度 dim=-1"
+   ],
+   "covered_list": [
+    "缩放因子 1/sqrt(d_k)"
+   ]
+  },
+  {
+   "q": "向量维度越来越高会带来什么问题？",
+   "cat": "C-聚合",
+   "expected_answerable": true,
+   "judged_answerable": true,
+   "retrieval_hit": true,
+   "answer": "向量维度越来越高会导致维度灾难，即样本变稀疏、距离差异缩小，'最近邻'和'远邻'难以区分，导致暴力搜索和索引都变难。",
+   "hits": [
+    "AI_Agent_大模型应用_技术一面_备考知识清单#60",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#56",
+    "AI_Agent_大模型应用_技术一面_备考知识清单#8"
+   ],
+   "ref": "维度灾难：样本变稀疏、距离差异缩小，最近邻与远邻难区分，暴力搜索和索引都变难（这也是 ANN 存在的原因）",
+   "grade": "CORRECT",
+   "score": 1.0,
+   "reason": "考生答案完整覆盖了参考答案要点中的所有关键概念",
+   "missing": "",
+   "missing_list": [],
+   "covered_list": [
+    "维度灾难",
+    "样本变稀疏",
+    "距离差异缩小",
+    "最近邻与远邻难区分",
+    "暴力搜索和索引都变难"
+   ]
+  },
+  {
+   "q": "Qwen3-8B 一共有多少参数、上下文窗口多大？",
+   "cat": "D-不可回答",
+   "expected_answerable": false,
+   "judged_answerable": false,
+   "retrieval_hit": false,
+   "answer": "资料不足",
+   "grade": "REFUSED",
+   "score": null,
+   "reason": "模型拒答，按预期",
+   "missing": "",
+   "ref": "清单没有 Qwen3-8B 的具体参数量与窗口，应回答资料不足"
+  },
+  {
+   "q": "MTEB 中文榜单上 bge-m3 排第几？",
+   "cat": "D-不可回答",
+   "expected_answerable": false,
+   "judged_answerable": false,
+   "retrieval_hit": false,
+   "answer": "资料不足",
+   "grade": "REFUSED",
+   "score": null,
+   "reason": "模型拒答，按预期",
+   "missing": "",
+   "ref": "清单没有 MTEB 排名数据，应回答资料不足"
+  },
+  {
+   "q": "OpenAI 的 embedding 接口每百万 token 多少钱？",
+   "cat": "D-不可回答",
+   "expected_answerable": false,
+   "judged_answerable": false,
+   "retrieval_hit": false,
+   "answer": "资料不足",
+   "grade": "REFUSED",
+   "score": null,
+   "reason": "模型拒答，按预期",
+   "missing": "",
+   "ref": "清单没有 API 定价，应回答资料不足"
+  },
+  {
+   "q": "我们公司去年因为设备故障损失了多少产能？",
+   "cat": "D-不可回答",
+   "expected_answerable": false,
+   "judged_answerable": false,
+   "retrieval_hit": false,
+   "answer": "资料不足",
+   "grade": "REFUSED",
+   "score": null,
+   "reason": "模型拒答，按预期",
+   "missing": "",
+   "ref": "清单没有公司生产数据，应回答资料不足"
+  },
+  {
+   "q": "DeepSeek-V3 训练用了多少张 H800 卡？",
+   "cat": "D-不可回答",
+   "expected_answerable": false,
+   "judged_answerable": false,
+   "retrieval_hit": false,
+   "answer": "资料不足",
+   "grade": "REFUSED",
+   "score": null,
+   "reason": "模型拒答，按预期",
+   "missing": "",
+   "ref": "清单没有 DeepSeek-V3 的训练硬件信息，应回答资料不足"
+  }
+ ]
+}

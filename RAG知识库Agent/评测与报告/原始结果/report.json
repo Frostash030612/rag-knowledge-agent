@@ -1,0 +1,786 @@
+{
+ "n_cases": 38,
+ "top_k": 3,
+ "modes": {
+  "hybrid": {
+   "recall@3": 0.871,
+   "mrr": 0.6935,
+   "n_gold_cases": 31
+  }
+ },
+ "retrieval_only": false,
+ "rerank": "max",
+ "rerank_pool": 40,
+ "alpha": 0.7,
+ "generation": {
+  "json_valid_rate": 1.0,
+  "answerable_accuracy": 0.9677,
+  "false_answer_rate_on_unanswerable": 0.0,
+  "avg_repairs": 0.0,
+  "p95_latency_s": 39.16
+ },
+ "cases": [
+  {
+   "q": "ALM-1042 报警的触发条件是什么？",
+   "answerable": true,
+   "answer": "腔体压力偏离设定值超过 8% 且持续 3 秒以上",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "02_alarm_manual#0",
+    "02_alarm_manual#1",
+    "09_equipment_maintenance#2"
+   ],
+   "gold": [
+    "02_alarm_manual#0"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 14.14,
+   "failed": false
+  },
+  {
+   "q": "ALM-3310 应该优先排查什么？",
+   "answerable": true,
+   "answer": "优先检查 MFC 是否需要重新标定、气瓶余量是否充足。若多台机台同时出现，应优先排查气体供应系统",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "02_alarm_manual#1",
+    "02_alarm_manual#0",
+    "09_equipment_maintenance#2"
+   ],
+   "gold": [
+    "02_alarm_manual#1"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 25.5,
+   "failed": false
+  },
+  {
+   "q": "MTBF 和 MTTR 分别是什么意思？",
+   "answerable": true,
+   "answer": "MTBF 是平均无故障工作时间（Mean Time Between Failures），表示设备两次故障之间的平均运行时间，数值越大越好。MTTR 是平均修复时间（Mean Time To Repair），表示设备从故障发生到恢复运行的平均时间，数值越小越好。",
+   "citations": [
+    1,
+    2
+   ],
+   "hits": [
+    "09_equipment_maintenance#1",
+    "11_glossary#8",
+    "09_equipment_maintenance#2"
+   ],
+   "gold": [
+    "09_equipment_maintenance#2",
+    "11_glossary#8"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 141.03,
+   "failed": false
+  },
+  {
+   "q": "WAT 和 PCM 是什么？",
+   "answerable": true,
+   "answer": "WAT 是 Wafer Acceptance Test（晶圆允收测试），也常称 PCM（Process Control Monitor，工艺控制监控），用于在晶圆级测量测试结构的电学参数，如阈值电压 Vt、饱和电流等。它是工艺与器件性能之间的桥梁，用于评估工艺参数偏移对器件性能的影响 [1]。PCM 与 WAT 是同一测试的不同名称，常被混用 [2]。",
+   "citations": [
+    1,
+    2
+   ],
+   "hits": [
+    "05_metrology_inspection#2",
+    "11_glossary#4",
+    "05_metrology_inspection#3"
+   ],
+   "gold": [
+    "05_metrology_inspection#3"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 16.98,
+   "failed": false
+  },
+  {
+   "q": "OOC 和 OOS 有什么区别？",
+   "answerable": true,
+   "answer": "OOC（Out of Control）指过程出现非随机波动，是过程层面的异常信号；OOS（Out of Spec）指产品测量值超出规格限，是产品层面的不合格判定。两者区别在于：1. OOC关注过程波动，OOS关注产品是否符合规格；2. OOC可能先于OOS发生（过程漂移但产品仍在规格内）；3. OOS必然导致产品不合格，而OOC不一定导致OOS。控制限（±3σ）用于检测OOC，规格限（USL/LSL）用于判定OOS",
+   "citations": [
+    1,
+    2,
+    3
+   ],
+   "hits": [
+    "07_spc#0",
+    "07_spc#1",
+    "11_glossary#7"
+   ],
+   "gold": [
+    "07_spc#1",
+    "11_glossary#7"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 22.65,
+   "failed": false
+  },
+  {
+   "q": "Cpk 和 Ppk 的区别是什么？",
+   "answerable": true,
+   "answer": "Cpk 与 Ppk 的主要区别在于：Cpk 同时考虑过程波动与居中程度，使用组内标准差计算；而 Ppk 仅反映实际表现，用整体标准差计算。此外，Cpk 的合格率换算依赖正态分布假设，对于偏斜分布（如缺陷数、颗粒计数）不适用 [1]。",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "07_spc#3",
+    "11_glossary#8",
+    "11_glossary#7"
+   ],
+   "gold": [
+    "07_spc#3",
+    "11_glossary#8"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 28.06,
+   "failed": false
+  },
+  {
+   "q": "DPPM 是什么指标？",
+   "answerable": true,
+   "answer": "DPPM（Defective Parts Per Million）是每百万件中的不良品数，用于衡量不良品流出风险的核心指标。",
+   "citations": [
+    3
+   ],
+   "hits": [
+    "09_equipment_maintenance#2",
+    "07_spc#3",
+    "12_test_program#1"
+   ],
+   "gold": [
+    "12_test_program#1"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 15.33,
+   "failed": false
+  },
+  {
+   "q": "AMC 指什么污染？",
+   "answerable": true,
+   "answer": "AMC 指气态分子污染（Airborne Molecular Contamination）",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "10_cleanroom_contamination#1",
+    "11_glossary#9",
+    "11_glossary#8"
+   ],
+   "gold": [
+    "10_cleanroom_contamination#0",
+    "10_cleanroom_contamination#1",
+    "11_glossary#8"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 16.91,
+   "failed": false
+  },
+  {
+   "q": "ISO 5 相当于传统洁净室的哪个等级？",
+   "answerable": true,
+   "answer": "Class 100",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "10_cleanroom_contamination#0",
+    "10_cleanroom_contamination#1",
+    "10_cleanroom_contamination#2"
+   ],
+   "gold": [
+    "10_cleanroom_contamination#1"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 11.09,
+   "failed": false
+  },
+  {
+   "q": "怎么让工艺在批次之间保持稳定，不要一批一批地漂？",
+   "answerable": true,
+   "answer": "通过以下方法保持工艺批次稳定：1. 按 step 分段提取特征（均值、斜率等）[1]；2. 使用 R2R 控制中的 EWMA 控制器，用上一批偏差修正下一批设定，注意 K 值的权衡[2]；3. 实施预防性维护并跟踪「距上次 PM 的时间/片数」作为特征，或按 PM 周期分段建模[3]；4. 剔除异常数据，避免异常值影响控制器更新[2]",
+   "citations": [
+    1,
+    2,
+    3
+   ],
+   "hits": [
+    "08_data_analysis#2",
+    "06_apc_r2r_fdc#1",
+    "09_equipment_maintenance#0"
+   ],
+   "gold": [
+    "06_apc_r2r_fdc#1"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 34.73,
+   "failed": false
+  },
+  {
+   "q": "为什么不能把传感器的整条曲线直接拍平了丢给模型？",
+   "answerable": true,
+   "answer": "因为一次工艺的多个 step 具有不同的物理机制，混在一起会导致模型学到的统计规律失去物理意义且无法解释。例如抽气、起辉、主刻蚀等阶段的特征差异显著，若不按 step 分段提取均值、斜率、方差等统计量，会破坏数据的物理特性，影响模型的可靠性与可解释性。",
+   "citations": [
+    1,
+    3
+   ],
+   "hits": [
+    "08_data_analysis#2",
+    "08_data_analysis#3",
+    "08_data_analysis#1"
+   ],
+   "gold": [
+    "08_data_analysis#2"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 22.03,
+   "failed": false
+  },
+  {
+   "q": "模型离线看着很好，上线就不准，通常是什么原因造成的？",
+   "answerable": true,
+   "answer": "通常是因为模型训练时使用了线上无法获取的数据，导致数据泄漏。例如，在虚拟量测中，若输入数据包含量测发生后的信息，或未严格遵循因果顺序，会使模型指标虚高但实际线上无效 [2]。此外，未考虑实时数据分布变化或缺乏工程师处置反馈机制也可能导致性能差异 [3]。",
+   "citations": [
+    2,
+    3
+   ],
+   "hits": [
+    "08_data_analysis#3",
+    "05_metrology_inspection#1",
+    "06_apc_r2r_fdc#3"
+   ],
+   "gold": [
+    "08_data_analysis#0",
+    "08_data_analysis#1"
+   ],
+   "retrieval_hit": false,
+   "repairs": 0,
+   "latency_s": 32.26,
+   "failed": false
+  },
+  {
+   "q": "怎么提前发现设备在慢慢变坏，而不是等它坏掉？",
+   "answerable": true,
+   "answer": "通过构建退化指标并结合多变量统计方法（如PCA、T²与SPE统计量）分析设备状态变化趋势，同时考虑距上次PM的时间/片数作为特征，可提前发现设备缓慢劣化现象 [1][2][3]。",
+   "citations": [
+    1,
+    2,
+    3
+   ],
+   "hits": [
+    "09_equipment_maintenance#2",
+    "06_apc_r2r_fdc#2",
+    "09_equipment_maintenance#1"
+   ],
+   "gold": [
+    "09_equipment_maintenance#2"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 39.15,
+   "failed": false
+  },
+  {
+   "q": "穿洁净服主要是为了保护谁？",
+   "answerable": true,
+   "answer": "穿洁净服主要是为了保护产品不被人的颗粒污染",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "10_cleanroom_contamination#1",
+    "10_cleanroom_contamination#2",
+    "10_cleanroom_contamination#0"
+   ],
+   "gold": [
+    "10_cleanroom_contamination#2"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 10.14,
+   "failed": false
+  },
+  {
+   "q": "测量一个具体数值和判断有没有异常，这两类工序有什么本质不同？",
+   "answerable": true,
+   "answer": "测量具体数值（量测）与判断异常（检测）的本质区别在于：量测输出连续量（如膜厚25.3nm）用于数值比对，检测输出缺陷数量/位置/分类用于异常判定。量测通常为抽检，检测可全检但受限于分辨率与速度 [1]。",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "05_metrology_inspection#0",
+    "05_metrology_inspection#1",
+    "08_data_analysis#1"
+   ],
+   "gold": [
+    "05_metrology_inspection#0"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 20.77,
+   "failed": false
+  },
+  {
+   "q": "什么是虚拟量测，它为什么有必要存在？",
+   "answerable": true,
+   "answer": "虚拟量测（VM）是利用当前批次可得的设备传感器数据（如温度、压力、功率等）预测尚未实测的量测值，本质是一个回归问题。它存在必要性是因为真实量测存在抽检限制和耗时问题，无法满足先进工艺控制对每片晶圆关键参数实时反馈的需求[1]。",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "05_metrology_inspection#1",
+    "09_equipment_maintenance#2",
+    "04_process_modules#0"
+   ],
+   "gold": [
+    "05_metrology_inspection#2",
+    "06_apc_r2r_fdc#0"
+   ],
+   "retrieval_hit": false,
+   "repairs": 0,
+   "latency_s": 19.3,
+   "failed": false
+  },
+  {
+   "q": "怎么判断一个工艺过程的能力够不够，能不能稳定产出合格品？",
+   "answerable": false,
+   "answer": "资料不足",
+   "citations": [
+    1,
+    3
+   ],
+   "hits": [
+    "11_glossary#8",
+    "07_spc#1",
+    "11_glossary#7"
+   ],
+   "gold": [
+    "07_spc#3"
+   ],
+   "retrieval_hit": false,
+   "repairs": 0,
+   "latency_s": 37.23,
+   "failed": false
+  },
+  {
+   "q": "设备做完维护之后，为什么历史数据不能直接拿来用了？",
+   "answerable": true,
+   "answer": "设备做完维护后，历史数据不能直接使用是因为维护操作（如腔体清洗、零部件更换）会改变设备的运行状态，导致维护前后数据分布不一致。这种状态跳变会影响建模准确性，因此必须将「距上次 PM 的时间/片数」作为重要特征，或按 PM 周期分段建模 [2][3]。",
+   "citations": [
+    2,
+    3
+   ],
+   "hits": [
+    "09_equipment_maintenance#2",
+    "09_equipment_maintenance#0",
+    "09_equipment_maintenance#1"
+   ],
+   "gold": [
+    "09_equipment_maintenance#1"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 27.92,
+   "failed": false
+  },
+  {
+   "q": "为什么刻蚀只是照着光刻的图形做，最后尺寸还是会偏？",
+   "answerable": true,
+   "answer": "刻蚀只是照着光刻的图形做，但最终尺寸仍可能偏移的原因包括：1) 刻蚀速率漂移会导致CD偏移，这是刻蚀模块本身是CD偏差的重要来源之一 [1]；2) 光刻模块的CD偏差会直接传递到刻蚀模块，因为刻蚀以光刻胶图形为掩模 [2]。",
+   "citations": [
+    1,
+    2
+   ],
+   "hits": [
+    "04_process_modules#1",
+    "04_process_modules#0",
+    "04_process_modules#2"
+   ],
+   "gold": [
+    "04_process_modules#1"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 36.79,
+   "failed": false
+  },
+  {
+   "q": "APC 的三层分别负责什么？它们怎么构成闭环？",
+   "answerable": true,
+   "answer": "APC的三层分别为：1. FDC（故障检测与分类）负责实时判断机台批次是否正常；2. VM（虚拟量测）预测无法实测的参数值并提供反馈信号；3. R2R（批次间控制）根据上一批次结果调整下一批参数。闭环构成逻辑为：FDC发现异常并拦截 → VM提供连续观测值 → R2R据此调整下一批输入参数，形成检测-观测-控制的闭环链条。",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "06_apc_r2r_fdc#0",
+    "06_apc_r2r_fdc#3",
+    "11_glossary#7"
+   ],
+   "gold": [
+    "06_apc_r2r_fdc#0"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 21.56,
+   "failed": false
+  },
+  {
+   "q": "良率损失怎么分类，在晶圆图上怎么体现？",
+   "answerable": true,
+   "answer": "良率损失分为随机缺陷导致的良率损失和系统性失效两类。随机缺陷在晶圆图上表现为失效die无规律分布，系统性失效则呈现规律图案如边缘环状、中心聚集、条纹状或与曝光shot边界一致的重复图案 [1]。",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "03_yield_analysis#0",
+    "11_glossary#4",
+    "05_metrology_inspection#2"
+   ],
+   "gold": [
+    "03_yield_analysis#0",
+    "03_yield_analysis#1"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 24.31,
+   "failed": false
+  },
+  {
+   "q": "EWMA 控制器的 K 值取大取小各有什么代价？",
+   "answerable": true,
+   "answer": "EWMA控制器的K值取大（接近1）的代价是响应速度加快但容易过冲，对量测噪声敏感度高导致输入波动大；K值取小（接近0）的代价是响应速度变慢，对噪声敏感度低但输入波动小且更平稳。",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "06_apc_r2r_fdc#1",
+    "07_spc#2",
+    "11_glossary#4"
+   ],
+   "gold": [
+    "06_apc_r2r_fdc#1"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 20.34,
+   "failed": false
+  },
+  {
+   "q": "FDC 要同时看哪两个统计量？各自反映什么？",
+   "answerable": true,
+   "answer": "FDC 要同时看 **T² 统计量** 和 **SPE（Q 统计量）**。T² 统计量反映过程变化幅度是否异常，SPE 统计量反映变量间相关结构是否被破坏 [1]",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "06_apc_r2r_fdc#2",
+    "07_spc#3",
+    "06_apc_r2r_fdc#3"
+   ],
+   "gold": [
+    "06_apc_r2r_fdc#2"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 18.31,
+   "failed": false
+  },
+  {
+   "q": "为什么设备报警太多会让系统失效？怎么避免？",
+   "answerable": true,
+   "answer": "设备报警过多会导致系统失效，因为工程师会因频繁误报而习惯性忽略真实告警 [1]。避免方法包括：1. 提高报警准确率（确保报警中有更高比例是真问题）；2. 优化平均提前量（提前预警缺陷产生）；3. 建立工程师处置结果回流机制，通过标注误报/真问题数据持续调阈值和训练分类器 [1]。同时需注意异常剔除，避免将误报测量值用于控制器更新 [3]",
+   "citations": [
+    1,
+    3
+   ],
+   "hits": [
+    "06_apc_r2r_fdc#3",
+    "09_equipment_maintenance#2",
+    "06_apc_r2r_fdc#2"
+   ],
+   "gold": [
+    "06_apc_r2r_fdc#3"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 29.58,
+   "failed": false
+  },
+  {
+   "q": "怎么做根因分析？有哪些常用手段？",
+   "answerable": true,
+   "answer": "根因分析需先区分良率损失类型（随机缺陷或系统性失效）[3]，再通过以下手段定位：1. 共性分析（Commonality Analysis）：比对同批失效lot的共享资源（机台/腔体/原料批次等），共性最高项为根因[2]；2. Wafer Map图案分类：根据失效die分布图案判断根因（如边缘环状→刻蚀/沉积均匀性问题；shot级重复→光刻掩模问题；随机散点→颗粒污染）[2]；3. 统计过程控制配合：用控制图监控关键参数是否失控，结合WAT电性参数偏移方向缩小可疑工序范围[2]",
+   "citations": [
+    2,
+    3
+   ],
+   "hits": [
+    "09_equipment_maintenance#2",
+    "03_yield_analysis#1",
+    "03_yield_analysis#0"
+   ],
+   "gold": [
+    "03_yield_analysis#1"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 39.23,
+   "failed": false
+  },
+  {
+   "q": "数据里缺失值为什么不能用均值直接填？",
+   "answerable": true,
+   "answer": "缺失值不能用均值直接填因为半导体数据的缺失往往不是随机的，量测点的选择有工艺原因（例如总是测固定位置），导致缺失模式可能携带信息。此外，缺失值的非随机性会破坏数据分布特性，影响模型对物理机制的准确捕捉。",
+   "citations": [
+    1,
+    2
+   ],
+   "hits": [
+    "08_data_analysis#2",
+    "05_metrology_inspection#3",
+    "08_data_analysis#3"
+   ],
+   "gold": [
+    "05_metrology_inspection#3",
+    "08_data_analysis#1"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 29.79,
+   "failed": false
+  },
+  {
+   "q": "高深宽比结构在清洗和沉积时各有什么难点？",
+   "answerable": true,
+   "answer": "高深宽比结构在清洗时的难点是干燥过程中毛细力可能导致图形倾斜或倒塌 [1]。在沉积时的难点是台阶覆盖率难以保证，尤其在极高深宽比结构中沉积高介电常数材料时，膜厚均匀性直接影响电容值 [2]。",
+   "citations": [
+    1,
+    2
+   ],
+   "hits": [
+    "10_cleanroom_contamination#2",
+    "04_process_modules#1",
+    "11_glossary#2"
+   ],
+   "gold": [
+    "04_process_modules#2",
+    "10_cleanroom_contamination#2"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 25.3,
+   "failed": false
+  },
+  {
+   "q": "DRAM 器件性能受哪些工艺模块影响？举出耦合路径。",
+   "answerable": true,
+   "answer": "DRAM 器件性能受光刻、刻蚀、薄膜沉积、CMP、扩散与离子注入模块影响。耦合路径包括：光刻 CD 偏差 → 刻蚀后 CD 偏差 → 晶体管 Vt 偏移 [1]；薄膜厚度偏差 → 电容值偏差 → 刷新特性变差 [1]；CMP 平坦度不足 → 光刻焦深不足 → 图形缺陷 [1]。此外，光刻的 CD 偏差会直接传递到刻蚀，导致接触电阻偏高或开路 [2]。",
+   "citations": [
+    1,
+    2
+   ],
+   "hits": [
+    "04_process_modules#2",
+    "04_process_modules#0",
+    "04_process_modules#1"
+   ],
+   "gold": [
+    "04_process_modules#0",
+    "04_process_modules#2"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 29.69,
+   "failed": false
+  },
+  {
+   "q": "测试限值为什么不等于 SPEC 限值？",
+   "answerable": true,
+   "answer": "测试限值不等于 SPEC 限值的原因有三个：测试设备的测量误差、接触电阻带来的额外偏差、以及温度与电压条件在测试时无法完全复现客户使用条件 [1]",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "12_test_program#0",
+    "07_spc#1",
+    "11_glossary#4"
+   ],
+   "gold": [
+    "12_test_program#1"
+   ],
+   "retrieval_hit": false,
+   "repairs": 0,
+   "latency_s": 14.5,
+   "failed": false
+  },
+  {
+   "q": "统计过程控制里，普通原因波动和特殊原因波动有什么区别？",
+   "answerable": true,
+   "answer": "普通原因波动（common cause）是过程固有的随机波动，属于正常范围；特殊原因波动（special cause）由可归因的异常事件引起，需要干预 [1]。",
+   "citations": [
+    1
+   ],
+   "hits": [
+    "07_spc#0",
+    "07_spc#1",
+    "07_spc#3"
+   ],
+   "gold": [
+    "07_spc#0"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 19.41,
+   "failed": false
+  },
+  {
+   "q": "为什么参数一多就不能只看单变量控制图了？",
+   "answerable": true,
+   "answer": "参数过多时仅使用单变量控制图会导致误报率累积和无法捕捉变量间关系变化。当监控100个参数时，每个参数的0.27%误报概率会积累为每天约0.27个误报，影响系统有效性 [1]。此外，多变量数据存在高度相关性，单变量方法无法检测变量间相关结构被破坏的情况（如同步参数出现背离），需用PCA+T²/SPE等多变量方法 [2]。",
+   "citations": [
+    1,
+    2
+   ],
+   "hits": [
+    "07_spc#3",
+    "06_apc_r2r_fdc#2",
+    "07_spc#2"
+   ],
+   "gold": [
+    "07_spc#3"
+   ],
+   "retrieval_hit": true,
+   "repairs": 0,
+   "latency_s": 24.38,
+   "failed": false
+  },
+  {
+   "q": "我们厂用的光刻机是 ASML 的哪一款型号？",
+   "answerable": false,
+   "answer": "资料不足",
+   "citations": [],
+   "hits": [
+    "04_process_modules#1",
+    "04_process_modules#0",
+    "08_data_analysis#2"
+   ],
+   "gold": [],
+   "retrieval_hit": false,
+   "repairs": 0,
+   "latency_s": 14.63,
+   "failed": false
+  },
+  {
+   "q": "请给出我们公司上季度的具体营收和毛利率数据。",
+   "answerable": false,
+   "answer": "资料不足",
+   "citations": [],
+   "hits": [
+    "06_apc_r2r_fdc#3",
+    "11_glossary#4",
+    "09_equipment_maintenance#0"
+   ],
+   "gold": [],
+   "retrieval_hit": false,
+   "repairs": 0,
+   "latency_s": 11.89,
+   "failed": false
+  },
+  {
+   "q": "ALM-9999 这个报警码代表什么？",
+   "answerable": false,
+   "answer": "资料不足",
+   "citations": [],
+   "hits": [
+    "02_alarm_manual#0",
+    "02_alarm_manual#1",
+    "09_equipment_maintenance#2"
+   ],
+   "gold": [],
+   "retrieval_hit": false,
+   "repairs": 0,
+   "latency_s": 18.13,
+   "failed": false
+  },
+  {
+   "q": "洁净室空调系统的具体能耗是多少千瓦时？",
+   "answerable": false,
+   "answer": "资料不足",
+   "citations": [],
+   "hits": [
+    "10_cleanroom_contamination#0",
+    "10_cleanroom_contamination#1",
+    "10_cleanroom_contamination#2"
+   ],
+   "gold": [],
+   "retrieval_hit": false,
+   "repairs": 0,
+   "latency_s": 11.56,
+   "failed": false
+  },
+  {
+   "q": "对比一下长鑫存储和三星在 DRAM 工艺上的具体差异。",
+   "answerable": false,
+   "answer": "资料不足",
+   "citations": [],
+   "hits": [
+    "01_dram_basics#0",
+    "01_dram_basics#1",
+    "04_process_modules#0"
+   ],
+   "gold": [],
+   "retrieval_hit": false,
+   "repairs": 0,
+   "latency_s": 19.16,
+   "failed": false
+  },
+  {
+   "q": "请给出我们厂 2025 年第四季度的整体良率数字。",
+   "answerable": false,
+   "answer": "资料不足",
+   "citations": [],
+   "hits": [
+    "03_yield_analysis#0",
+    "10_cleanroom_contamination#2",
+    "11_glossary#4"
+   ],
+   "gold": [],
+   "retrieval_hit": false,
+   "repairs": 0,
+   "latency_s": 13.0,
+   "failed": false
+  },
+  {
+   "q": "EUV 光刻的曝光波长是多少纳米？",
+   "answerable": false,
+   "answer": "资料不足",
+   "citations": [],
+   "hits": [
+    "04_process_modules#0",
+    "04_process_modules#1",
+    "04_process_modules#2"
+   ],
+   "gold": [],
+   "retrieval_hit": false,
+   "repairs": 0,
+   "latency_s": 15.05,
+   "failed": false
+  }
+ ]
+}

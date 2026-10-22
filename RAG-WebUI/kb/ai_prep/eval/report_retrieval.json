@@ -1,0 +1,25 @@
+{
+ "n_cases": 30,
+ "top_k": 3,
+ "modes": {
+  "vector": {
+   "recall@3": 0.84,
+   "mrr": 0.7933,
+   "n_gold_cases": 25
+  },
+  "bm25": {
+   "recall@3": 0.8,
+   "mrr": 0.6867,
+   "n_gold_cases": 25
+  },
+  "hybrid": {
+   "recall@3": 0.88,
+   "mrr": 0.8267,
+   "n_gold_cases": 25
+  }
+ },
+ "retrieval_only": true,
+ "rerank": "max",
+ "rerank_pool": 40,
+ "alpha": 0.7
+}

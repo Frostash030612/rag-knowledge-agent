@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>人工标注 · 答案质量</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --panel:#fff; --line:#e3e6ea; --ink:#1c2128; --muted:#6b7683;
+    --ok:#15803d; --ok-soft:#dcfce7;
+    --warn:#b45309; --warn-soft:#fef3c7;
+    --bad:#b91c1c; --bad-soft:#fee2e2;
+    --accent:#0f766e; --accent-soft:#e6f4f2;
+    --mono:ui-monospace,SFMono-Regular,"Cascadia Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.7 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+  header{background:var(--panel);border-bottom:1px solid var(--line);
+    padding:12px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:20}
+  header h1{font-size:15px;margin:0;font-weight:600}
+  header .who{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted)}
+  header input{border:1px solid var(--line);border-radius:7px;padding:6px 10px;
+    font:inherit;font-size:13px;width:120px;outline:none}
+  header input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .prog{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:12.5px;
+    font-family:var(--mono);color:var(--muted)}
+  .bar{width:160px;height:6px;background:#eef1f4;border-radius:99px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+
+  main{max-width:900px;margin:0 auto;padding:20px 22px 120px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:11px;
+    padding:18px 20px;margin-bottom:14px}
+  .kicker{font-size:11.5px;letter-spacing:.7px;text-transform:uppercase;
+    color:var(--muted);font-weight:600;margin-bottom:8px;display:flex;
+    align-items:center;gap:9px}
+  .tag{font-size:11.5px;padding:1px 8px;border-radius:99px;background:#eef1f4;
+    color:var(--muted);font-weight:500;letter-spacing:0;text-transform:none;
+    font-family:var(--mono)}
+  .q{font-size:17px;font-weight:600;line-height:1.6}
+  .ref{background:#fbfcfd;border-left:3px solid var(--accent);border-radius:6px;
+    padding:11px 14px;font-size:14px;color:#2b333c;white-space:pre-wrap;word-break:break-word}
+  .nosef{color:var(--muted);font-size:13.5px;font-style:italic}
+  .ans{font-size:14.5px;white-space:pre-wrap;word-break:break-word;
+    background:#fcfdfd;border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+  .note{font-size:12.5px;color:var(--muted);margin-top:9px}
+
+  .actions{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.97);
+    border-top:1px solid var(--line);padding:12px 22px;backdrop-filter:blur(6px);
+    display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;z-index:20}
+  button{font:inherit;font-weight:500;cursor:pointer;border-radius:9px;
+    border:1px solid var(--line);background:#fff;padding:10px 20px;font-size:14px;
+    transition:.12s;display:flex;align-items:center;gap:8px}
+  button:hover{border-color:#c6ccd3;background:#fbfcfc}
+  button .k{font-family:var(--mono);font-size:11px;opacity:.55;
+    border:1px solid currentColor;border-radius:4px;padding:0 5px}
+  button.c{background:var(--ok-soft);border-color:#a7e0bc;color:#14532d}
+  button.p{background:var(--warn-soft);border-color:#f0d28a;color:#78350f}
+  button.i{background:var(--bad-soft);border-color:#f3b4b4;color:#7f1d1d}
+  button.c:hover{background:#c8f2d6}
+  button.p:hover{background:#fde8b0}
+  button.i:hover{background:#fdd0d0}
+  button.ghost{border-color:transparent;background:transparent;color:var(--muted);
+    font-size:13px;padding:8px 12px}
+  button.ghost:hover{background:#eef1f4;border-color:transparent}
+  button:disabled{opacity:.45;cursor:not-allowed}
+
+  .jump{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);
+    max-width:900px;margin:0 auto 14px;padding:0 22px}
+  .jump input{width:64px;border:1px solid var(--line);border-radius:6px;
+    padding:5px 8px;font:inherit;font-size:13px;text-align:center}
+
+  .done{text-align:center;padding:50px 20px}
+  .done h2{font-size:20px;margin:0 0 10px}
+  .done p{color:var(--muted);margin:0 0 18px}
+  .saved{font-size:12px;color:var(--ok);min-height:18px}
+  .flash{animation:fl .5s}
+  @keyframes fl{0%{background:#fff7d6}100%{background:transparent}}
+
+  @media(max-width:640px){
+    main{padding:14px 14px 150px}
+    button{padding:9px 13px;font-size:13.5px}
+    .bar{width:80px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>答案质量标注</h1>
+  <div class="who">
+    <label for="who">标注者</label>
+    <input id="who" placeholder="你的名字" autocomplete="off">
+  </div>
+  <div class="prog">
+    <span id="pgText">0 / 0</span>
+    <span class="bar"><i id="pgBar"></i></span>
+    <span id="saveState" class="saved"></span>
+  </div>
+</header>
+
+<div class="jump">
+  <span>跳到题号</span>
+  <input id="jumpTo" placeholder="A001" autocomplete="off">
+  <button class="ghost" id="btnJump">跳转</button>
+  <button class="ghost" id="btnUnlabeled">下一道未标</button>
+</div>
+
+<main id="app">
+  <div class="card"><div class="nosef">正在加载样本…</div></div>
+</main>
+
+<div class="actions" id="actions" style="display:none">
+  <button class="c" data-g="CORRECT"><span class="k">1</span> 正确 CORRECT</button>
+  <button class="p" data-g="PARTIAL"><span class="k">2</span> 漏要点 PARTIAL</button>
+  <button class="i" data-g="INCORRECT"><span class="k">3</span> 答错/答非所问 INCORRECT</button>
+  <button class="ghost" id="btnPrev"><span class="k">←</span> 上一条</button>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+let CASES = [], META = null, LABELS = {}, IDX = 0, WHO = "";
+const LS_KEY = "rag_annotator_name";
+
+function validWho(n){ return /^[A-Za-z0-9_-]{1,24}$/.test(n); }
+
+function saveWho(){
+  const v = $("#who").value.trim();
+  if (!validWho(v)) {
+    $("#saveState").textContent = "名字只能用字母数字-_";
+    $("#saveState").style.color = "var(--bad)";
+    return false;
+  }
+  if (v !== WHO) {
+    WHO = v;
+    try { localStorage.setItem(LS_KEY, v); } catch {}
+    loadAnnotations();
+  }
+  return true;
+}
+
+async function loadAnnotations(){
+  if (!WHO) return;
+  try {
+    const r = await fetch(`/api/annotations?annotator=${encodeURIComponent(WHO)}`);
+    const d = await r.json();
+    LABELS = d.labels || {};
+    paint();
+  } catch (e) {
+    $("#saveState").textContent = "读取标注失败";
+  }
+}
+
+function progress(){
+  const n = Object.keys(LABELS).length;
+  $("#pgText").textContent = `${n} / ${CASES.length}`;
+  $("#pgBar").style.width = CASES.length ? (n / CASES.length * 100) + "%" : "0";
+}
+
+function current(){ return CASES[IDX]; }
+
+function paint(){
+  if (!CASES.length) return;
+  progress();
+  if (IDX >= CASES.length) {
+    $("#actions").style.display = "none";
+    $("#app").innerHTML = `<div class="card done">
+      <h2>全部 ${CASES.length} 条已标完 🎉</h2>
+      <p>进度已保存在服务器（kb/_annotations_${esc(WHO)}.json）。<br>
+      另一位标注者请另开窗口用不同名字标注。</p>
+      <button class="ghost" onclick="IDX=0;paint()">回到第 1 条</button>
+    </div>`;
+    return;
+  }
+  $("#actions").style.display = "flex";
+  const c = current();
+  const mine = LABELS[c.id] || "";
+  const isHard = !c.ref;
+
+  $("#app").innerHTML = `
+    <div class="card" id="card">
+      <div class="kicker">
+        第 ${IDX + 1} / ${CASES.length} 条
+        <span class="tag">${esc(c.id)}</span>
+        <span class="tag">${esc(c.kb || "")}</span>
+        ${c.cat ? `<span class="tag">${esc(c.cat)}</span>` : ""}
+        ${mine ? `<span class="tag" style="background:var(--accent-soft);color:var(--accent)">已标：${esc(mine)}</span>` : ""}
+      </div>
+      <div class="q">${esc(c.q)}</div>
+    </div>
+
+    <div class="card">
+      <div class="kicker">参考答案要点</div>
+      ${isHard
+        ? `<div class="nosef">本题为构造样本，无参考要点。按「这个答案是否正确回答了上面的问题」来判。</div>`
+        : `<div class="ref">${esc(c.ref)}</div>`}
+    </div>
+
+    <div class="card">
+      <div class="kicker">考生答案</div>
+      <div class="ans">${esc(c.answer)}</div>
+      ${c.construction ? `<div class="note">本题构造方式：${esc(c.construction)}</div>` : ""}
+    </div>
+  `;
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+
+async function grade(g){
+  if (!WHO) { $("#who").focus(); return; }
+  const c = current();
+  if (!c) return;
+  LABELS[c.id] = g;
+  progress();
+  const card = $("#card");
+  if (card) card.classList.add("flash");
+
+  // 先本地前进，避免等待网络；随后后台保存
+  IDX++;
+  paint();
+  try {
+    const r = await fetch("/api/save", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({annotator: WHO, labels: LABELS}),
+    });
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error || "保存失败");
+    $("#saveState").textContent = `已保存 ${d.n} 条`;
+    $("#saveState").style.color = "var(--ok)";
+  } catch (e) {
+    $("#saveState").textContent = "⚠ 保存失败：" + e.message;
+    $("#saveState").style.color = "var(--bad)";
+  }
+}
+
+function prev(){
+  if (IDX <= 0) return;
+  IDX--;
+  paint();
+}
+
+function nextUnlabeled(){
+  for (let i = IDX; i < CASES.length; i++) {
+    if (!LABELS[CASES[i].id]) { IDX = i; paint(); return; }
+  }
+  for (let i = 0; i < CASES.length; i++) {
+    if (!LABELS[CASES[i].id]) { IDX = i; paint(); return; }
+  }
+  IDX = CASES.length; paint();
+}
+
+function jump(){
+  const v = $("#jumpTo").value.trim().toUpperCase();
+  const i = CASES.findIndex(c => c.id === v);
+  if (i >= 0) { IDX = i; paint(); $("#jumpTo").value = ""; }
+  else { $("#jumpTo").value = ""; $("#jumpTo").placeholder = "没找到"; }
+}
+
+document.addEventListener("keydown", e => {
+  if (e.target.tagName === "INPUT") {
+    if (e.key === "Enter") { e.target.id === "jumpTo" ? jump() : saveWho(); }
+    return;
+  }
+  const k = e.key.toLowerCase();
+  if (k === "1" || k === "c") grade("CORRECT");
+  else if (k === "2" || k === "p") grade("PARTIAL");
+  else if (k === "3" || k === "i") grade("INCORRECT");
+  else if (e.key === "ArrowLeft") prev();
+  else if (k === "n") nextUnlabeled();
+});
+
+document.querySelectorAll(".actions button[data-g]").forEach(b => {
+  b.onclick = () => grade(b.dataset.g);
+});
+$("#btnPrev").onclick = prev;
+$("#btnUnlabeled").onclick = nextUnlabeled;
+$("#btnJump").onclick = jump;
+$("#who").addEventListener("change", saveWho);
+$("#who").addEventListener("blur", saveWho);
+
+// ---- 启动 ----
+(async function init(){
+  try {
+    const [m, s] = await Promise.all([
+      fetch("/api/meta").then(r => r.json()),
+      fetch("/api/sample").then(r => r.json())
+    ]);
+    META = m.meta;
+    CASES = s.cases || [];
+    let saved = "";
+    try { saved = localStorage.getItem(LS_KEY) || ""; } catch {}
+    if (saved) { $("#who").value = saved; WHO = saved; }
+    await loadAnnotations();
+    paint();
+    if (!WHO) $("#who").focus();
+  } catch (e) {
+    $("#app").innerHTML = `<div class="card"><div class="nosef">
+      加载失败：${esc(e.message)}<br>请确认标注服务已启动。</div></div>`;
+  }
+})();
+</script>
+</body>
+</html>

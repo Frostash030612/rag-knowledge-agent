@@ -1,0 +1,36 @@
+# 评测集：AI Agent 备考清单
+# 字段：q=问题, gold_cids=正确答案所在 chunk, answerable=资料是否足以回答,
+#       ref=参考答案要点, cat=类别
+# 类别：A-精确匹配（关键词检索主场）/ B-语义泛化（向量检索主场）
+#       C-聚合（跨多条）/ D-不可回答（测幻觉）
+# 由 RAG-WebUI/build_eval.py 生成，含 gold 存在性与实体一致性校验。
+{"q": "自注意力的复杂度为什么是 O(n²)？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#4", "AI_Agent_大模型应用_技术一面_备考知识清单#5"], "answerable": true, "ref": "注意力要对每个 token 与所有 token 两两计算相似度，序列长度 n 对应 n×n 个组合；时间与空间复杂度都是 O(n²·d)", "cat": "A-精确匹配"}
+{"q": "KV Cache 的显存怎么估算？写出公式。", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#8"], "answerable": true, "ref": "2 × L × n_kv_heads × d_head × seq_len × batch × bytes_per_element；2 是 K/V 两份，bytes 是精度（FP16=2，INT8=1）", "cat": "A-精确匹配"}
+{"q": "MQA 和 GQA 是为了省什么？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#7"], "answerable": true, "ref": "省 KV Cache 显存，不是省参数量；LLaMA-2 70B 用 GQA 把 KV Cache 缩到 MHA 的约 1/8", "cat": "A-精确匹配"}
+{"q": "RMSNorm 和 LayerNorm 有什么区别？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#14"], "answerable": true, "ref": "RMSNorm 去掉均值中心化，只用均方根 x/sqrt(mean(x²)+ε)·γ；少一次减法、少一个 β 参数，更快且效果基本不降", "cat": "A-精确匹配"}
+{"q": "混合检索里 RRF 的公式是什么？k 取多少？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#61", "AI_Agent_大模型应用_技术一面_备考知识清单#62"], "answerable": true, "ref": "score(d) = Σ_i 1/(k + rank_i(d))，k 通常取 60；只用排名不用分数，规避两路分数不可比", "cat": "A-精确匹配"}
+{"q": "近似最近邻（ANN）和维度灾难分别指什么？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#60"], "answerable": true, "ref": "ANN 牺牲少量精度换数量级速度提升；维度灾难指维度升高后样本稀疏、距离差异缩小，最近邻与远邻难以区分", "cat": "A-精确匹配"}
+{"q": "常用的向量相似度度量有哪几种？该选哪个？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#54", "AI_Agent_大模型应用_技术一面_备考知识清单#55"], "answerable": true, "ref": "余弦相似度、点积、欧氏距离；关键是选择和 embedding 模型训练时一致的度量方式，否则召回明显掉", "cat": "A-精确匹配"}
+{"q": "一个模型只会按你的指令回一次话，另一个会自己决定下一步做什么，差别在哪？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#29"], "answerable": true, "ref": "普通 LLM 应用是「一次调用得到答案」，Agent 是「模型自己决定下一步做什么，不需要人逐步指挥」", "cat": "B-语义泛化"}
+{"q": "为什么让模型先想再答（CoT）和让它边想边调工具，不是一回事？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#32", "AI_Agent_大模型应用_技术一面_备考知识清单#33"], "answerable": true, "ref": "CoT 只在推理空间里想，ReAct 的 Thought 之后必须接 Action（调工具）并读 Observation；CoT 可以嵌进 ReAct 的 Thought 里", "cat": "B-语义泛化"}
+{"q": "如果资料里根本没有答案，怎么让模型老实说不知道、而不是硬编一个？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#21"], "answerable": true, "ref": "Prompt 里明确拒答指令（资料中没有就直接回答「资料中未提及」）；配合 RAG 提供证据、结构化输出约束、要求引用，实际项目里组合使用", "cat": "B-语义泛化"}
+{"q": "模型离线指标很好看，一上线就掉，通常是什么原因？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#21"], "answerable": true, "ref": "要区分检索侧幻觉和生成侧幻觉：前者是没检索到或排错，后者是有资料但模型没按资料答；上线掉还要查数据泄漏与分布漂移", "cat": "B-语义泛化"}
+{"q": "换了新的向量模型之后，为什么不能直接把旧的向量覆盖掉？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#56"], "answerable": true, "ref": "新旧 query 与文档向量不在同一语义空间，混用会导致召回崩坏；应做 versioned index，新老索引并行、摄取双写、灰度对比 Recall@k 后再下线旧索引", "cat": "B-语义泛化"}
+{"q": "为什么向量检索之外还要留一路关键词检索？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#60", "AI_Agent_大模型应用_技术一面_备考知识清单#61", "AI_Agent_大模型应用_技术一面_备考知识清单#62"], "answerable": true, "ref": "向量擅长语义泛化但会糊掉专有名词/型号/错误码，BM25 擅长精确匹配；两路召回互补再融合", "cat": "B-语义泛化"}
+{"q": "Recall@k 已经很高了，为什么用户还是觉得答不准？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#62", "AI_Agent_大模型应用_技术一面_备考知识清单#63", "AI_Agent_大模型应用_技术一面_备考知识清单#64"], "answerable": true, "ref": "Recall 解决「召回全不全」，排序准不准要靠 rerank；融合后必须接 rerank", "cat": "B-语义泛化"}
+{"q": "用户问法和文档里的说法完全不一样，怎么提高命中率？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#64", "AI_Agent_大模型应用_技术一面_备考知识清单#65"], "answerable": true, "ref": "查询改写（Multi-Query）与 HyDE（先生成假想答案再检索）；改写后要做一致性检查，并保留原始 query 作为一路通道", "cat": "B-语义泛化"}
+{"q": "怎么把「让模型知道新知识」和「让模型学会新行为」这两件事分开处理？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#23"], "answerable": true, "ref": "知道新知识用 RAG（改文档即可，实时生效、可追溯）；学会新行为用微调（改变行为模式，需要 GPU + 高质量标注）；按格式输出先试 Prompt", "cat": "B-语义泛化"}
+{"q": "长任务里 Agent 越跑越偏、忘记原来的目标，怎么防？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#50", "AI_Agent_大模型应用_技术一面_备考知识清单#51"], "answerable": true, "ref": "上下文漂移；做法包括维护任务清单、阶段性复述目标、Observation 摘要、上下文压缩按优先级裁剪", "cat": "B-语义泛化"}
+{"q": "微调、RAG、提示工程三者该怎么选？各自的代价是什么？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#23"], "answerable": true, "ref": "一句话判据：知道新知识用 RAG；学会新行为用微调；按格式输出先试 Prompt。RAG 不改模型、成本低可追溯；Prompt 零成本但换版本可能失效；微调需 GPU+标注但能稳定行为", "cat": "C-聚合"}
+{"q": "幻觉有哪些缓解手段？哪种最有效？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#21"], "answerable": true, "ref": "五板斧按优先级：RAG（最有效）、Function Calling、Structured Output + JSON Schema、Prompt 明确拒答、多轮验证/交叉校验；要区分检索侧与生成侧幻觉", "cat": "C-聚合"}
+{"q": "为什么现在的主流大模型都用 Pre-Norm 加 RMSNorm？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#14"], "answerable": true, "ref": "Pre-Norm 让残差路径无归一化、梯度直接流过，训练稳定且深层不需 warmup；RMSNorm 去掉均值中心化，更快且效果基本不降（LLaMA 系全用）", "cat": "C-聚合"}
+{"q": "生产环境里怎么防止 Agent 陷入无限循环？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#44"], "answerable": true, "ref": "多层保险：max_iterations 硬上限、重复检测（工具名+参数哈希）、进度判断、Observation 摘要、失败工具冷却、Critic/Controller 节点；「循环是控制问题，不只是提示词问题」", "cat": "C-聚合"}
+{"q": "长上下文窗口越来越大，是不是就不需要 RAG 了？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#20", "AI_Agent_大模型应用_技术一面_备考知识清单#21"], "answerable": true, "ref": "不是。长上下文的有效利用率远低于标称值，且成本和延迟是平方级的，所以长窗口与 RAG 互补而非替代", "cat": "C-聚合"}
+{"q": "混合检索的两路分数怎么融合？为什么推荐 RRF？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#61", "AI_Agent_大模型应用_技术一面_备考知识清单#62"], "answerable": true, "ref": "融合方法有 RRF、加权求和、Learning to Rank；RRF 用 score(d)=Σ1/(k+rank_i(d))，k=60，只用排名不用分数，规避两路分数不可比", "cat": "C-聚合"}
+{"q": "手撕自注意力时，哪些细节最容易写错？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#118", "AI_Agent_大模型应用_技术一面_备考知识清单#119"], "answerable": true, "ref": "缩放因子 1/sqrt(d_k)、causal mask 的位置、softmax 的维度 dim=-1", "cat": "C-聚合"}
+{"q": "向量维度越来越高会带来什么问题？", "gold_cids": ["AI_Agent_大模型应用_技术一面_备考知识清单#60"], "answerable": true, "ref": "维度灾难：样本变稀疏、距离差异缩小，最近邻与远邻难区分，暴力搜索和索引都变难（这也是 ANN 存在的原因）", "cat": "C-聚合"}
+{"q": "Qwen3-8B 一共有多少参数、上下文窗口多大？", "gold_cids": [], "answerable": false, "ref": "清单没有 Qwen3-8B 的具体参数量与窗口，应回答资料不足", "cat": "D-不可回答"}
+{"q": "MTEB 中文榜单上 bge-m3 排第几？", "gold_cids": [], "answerable": false, "ref": "清单没有 MTEB 排名数据，应回答资料不足", "cat": "D-不可回答"}
+{"q": "OpenAI 的 embedding 接口每百万 token 多少钱？", "gold_cids": [], "answerable": false, "ref": "清单没有 API 定价，应回答资料不足", "cat": "D-不可回答"}
+{"q": "我们公司去年因为设备故障损失了多少产能？", "gold_cids": [], "answerable": false, "ref": "清单没有公司生产数据，应回答资料不足", "cat": "D-不可回答"}
+{"q": "DeepSeek-V3 训练用了多少张 H800 卡？", "gold_cids": [], "answerable": false, "ref": "清单没有 DeepSeek-V3 的训练硬件信息，应回答资料不足", "cat": "D-不可回答"}
