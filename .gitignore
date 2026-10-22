@@ -32,6 +32,8 @@ venv/
 # ---------------------------------------------------------------
 edit_resume.py
 make_onepage.py
+insert_rag_new.py
+onepage_new.py
 inspect_*.py
 dump_*.py
 _t.py
